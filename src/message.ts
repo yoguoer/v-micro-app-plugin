@@ -7,7 +7,7 @@
  */
 import { EventCenterForMicroApp, getAllApps } from '@micro-zoe/micro-app'
 import microAppUtils from './utils.ts'
-import { mainAppConfigs } from './appConfigs.ts'
+import { getMainAppConfigs } from './appConfigs.ts'
 
 const { getMicroAppName, getMicroApp, isBaseApp } = microAppUtils
 
@@ -135,6 +135,6 @@ class MicroAppMessage {
 const microAppMessage = new MicroAppMessage(
   getMicroApp(),
   isBaseApp,
-  mainAppConfigs['disable-sandbox'] || false
+  getMainAppConfigs()['disable-sandbox'] || false
 )
 export default microAppMessage

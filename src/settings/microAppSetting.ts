@@ -7,11 +7,11 @@ class microAppSetting {
     private static instance: microAppSetting | null = null;
     // 定义私有变量，用于存储配置信息
     private readonly setting: microAppConfig = {
-        projectName: '',
-        mocroAppUrl: {},
-        subAppConfigs: {},
-        isBaseApp: true,
-        basePath: '',
+        projectName: '', // 项目名称
+        microAppUrl: {}, // 微前端配置
+        subAppConfigs: {}, // 子应用配置
+        isBaseApp: true, // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
+        basePath: '', // 打包路径（env.VITE_BASE_PATH）
     }
 
     // 私有构造函数，确保外部不能直接通过new创建实例  
@@ -42,6 +42,7 @@ class microAppSetting {
                 this.setting[key] = initValue[key];
             }
         }
+        console.log("✅全局存储所有初始化参数:", this.setting)
     }
     // 获取全局配置  
     public getConfig(key: keyof microAppConfig): any {

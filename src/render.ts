@@ -1,11 +1,13 @@
 import microApp from '@micro-zoe/micro-app'
 import { isEmpty } from './utils/is.ts'
-import { subAppConfigs } from './appConfigs.ts'
+import { getSubAppConfigs } from './appConfigs.ts'
 
 /**
  * 渲染所有子应用
  */
-export function renderAllSubApp() {
+export default function renderAllSubApp() {
+  const subAppConfigs = getSubAppConfigs()
+  
   if (isEmpty(subAppConfigs)) {
     return Error('❗未配置子应用。')
   }

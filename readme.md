@@ -18,13 +18,19 @@
 
 ## 📦 安装
 
-- 通过npm安装
+- 通过 npm 安装
 
 ```bash
-npm install v-micro-app-plugin --save
+npm i v-micro-app-plugin --save
 ```
 
-- 通过yarn安装
+- 通过 pnpm 安装
+
+```bash
+pnpm i v-micro-app-plugin --save
+```
+
+- 通过 yarn 安装
 
 ```bash
 yarn add v-micro-app-plugin
@@ -32,18 +38,38 @@ yarn add v-micro-app-plugin
 
 ## 🔧 使用指南
 
-1. 引入插件
+1、引入插件
 
-  在你的主应用或目标系统中引入v-micro-app-plugin。
+  	在你的主应用或目标系统中引入v-micro-app-plugin。以下是简单使用的一个基本示例：
 
-1. 配置微应用
+```
+import initMyMicroApp from 'v-micro-app-plugin'
 
-  在插件配置中指定微应用的入口、名称、版本等信息。
+router =  await import('@/router').then(async (routerModule: any) => {
+	return await routerModule.setupRouter(app)
+  })
+}
 
-1. 加载微应用
+export function setupMicroApp(app: App, router?: any) {
+  const options = {
+    projectName: '应用名称',
+    microAppUrl: {},
+    subAppConfigs: {},
+    isBaseApp: false,
+    basePath: '打包路径',
+  }
+  return initMyMicroApp(app, options, router)
+}
+```
 
-  插件将自动处理微应用的加载、挂载和卸载。你只需在页面上准备好相应的挂载点即可。
+2、配置微应用
 
-1. 跨应用通信
+  	在插件配置中指定微应用的入口、名称、版本等信息。
 
-  使用插件提供的API进行跨应用通信，如事件发布和订阅。
+3、加载微应用
+
+  	插件将自动处理微应用的加载、挂载和卸载。你只需在页面上准备好相应的挂载点即可。
+
+4、跨应用通信
+
+  	使用插件提供的API进行跨应用通信，如事件发布和订阅。
