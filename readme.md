@@ -92,19 +92,19 @@ import initMyMicroApp from 'v-micro-app-plugin'
 
 ```typescript
 const options = {  
-  projectName: 'micro-app-Name',  
+  projectName: 'v-micro-app-plugin',  
   subAppConfigs: {  
-    'oldRDM': {  
+    'appFirst': {  
       name: 'appFirst',  
       url: 'http://localhost:4000/#/' // 微应用的运行地址  
     },  
-    'newRDM': {  
+    'appSecond': {  
       name: 'appSecond',  
       url: 'http://localhost:3000/#/' // 另一个微应用的运行地址  
     }  
   },  
-  isBaseApp: true, // 标记当前应用为主应用
-  basePath: '/vivien', // 打包路径或其他基础路径 
+  isBaseApp: true, // 当前应用是否为主应用
+  basePath: '/', // 打包路径或其他基础路径 
   disableSandbox: false, // 是否禁用沙箱
   iframe: true, // 是否使用 iframe
 };  
@@ -122,7 +122,7 @@ await initMyMicroApp(app, options, router, store);
 const env = import.meta.env.MODE; // 这里使用的是 Vite 默认的 MODE 变量 
 const microAppUrl = {  
   appFirst: {  
-    development: 'http://localhost:4000/#/',  
+    development: 'http://localhost:3000/#/',  
     test: 'https://test.example.com/vivien/appFirst/',  
     production: 'https://www.example.com/vivien/appFirst/'  
   },  
@@ -146,13 +146,17 @@ const options = {
     }  
   },  
   isBaseApp: true, // 是否为主应用  
-  basePath: '/vivien', // 打包路径或其他基础路径  
+  basePath: '/', // 打包路径或其他基础路径  
   disableSandbox: false, // 是否禁用沙箱
   iframe: true, // 是否使用 iframe
 };  
   
-await initMyMicroApp(app, options);
+await initMyMicroApp(app, options, router, store);
 ```
+
+> ⚠**注意**：
+>
+> 不管是主应用还是子应用，都必须安装插件，根据需要进行不同的配置。
 
 # 对象和方法
 
@@ -217,22 +221,22 @@ interface MessageParamsType {
 > import { getMicroAppMessage } from "v-micro-app-plugin";
 > 
 > function testSendMessage(){
->   const microAppMessage = getMicroAppMessage()
->   microAppMessage.sendMessage({
->     data: { type: 'sendMessage', value: 'appFirst给主应用发送数据~' },
->     callback: () => {
->       console.log('使用sendMessage发送数据成功，执行回调！')
->     }
->   })
->   microAppMessage.sendGlobal({
->     data: { type: 'sendGlobal', value: 'appFirst给全局发送数据~' },
->     callback: () => {
->       console.log('使用sendGlobal发送数据成功，执行回调！')
->     }
->   })
->   setTimeout(() => {
->       console.log(getGlobalMessage:", microAppMessage.getGlobalMessage(),"getMessage:", microAppMessage.getMessage())
->   },3000)
+>     const microAppMessage = getMicroAppMessage()
+>     microAppMessage.sendMessage({
+>      data: { type: 'sendMessage', value: 'appFirst给主应用发送数据~' },
+>      callback: () => {
+>        console.log('使用sendMessage发送数据成功，执行回调！')
+>      }
+>     })
+>     microAppMessage.sendGlobal({
+>      data: { fun: 'sendGlobal', text: 'appFirst给全局发送数据~' },
+>      callback: () => {
+>        console.log('使用sendGlobal发送数据成功，执行回调！')
+>      }
+>     })
+>     setTimeout(() => {
+>        console.log("getGlobalMessage:", microAppMessage.getGlobalMessage(),"getMessage:", microAppMessage.getMessage())
+>     },3000)
 > }
 > // 结果发现：子应用 => 可以接收到全局信息，但接收不到自己发给主应用的信息。
 > ```
@@ -243,17 +247,17 @@ interface MessageParamsType {
 > import { getMicroAppMessage } from "v-micro-app-plugin";
 > 
 > function testGetMessage() {
->   const microAppMessage = getMicroAppMessage()
->   setTimeout(() => {
->     console.log('getGlobalMessage:',microAppMessage.getGlobalMessage(),'getMessage:',microAppMessage.getMessage('appFirst'))
->   }, 3000)
+>     const microAppMessage = getMicroAppMessage()
+>     setTimeout(() => {
+>      console.log('getGlobalMessage:',microAppMessage.getGlobalMessage(),'getMessage:',microAppMessage.getMessage('appFirst'))
+>     }, 3000)
 > }
 > // 结果发现：主应用 => 可以接收到全局信息，也可以收到 appFirst 发来的信息。
 > ```
 >
 > **Tip**：其它通信 API 方法的使用方式同上。
 >
-> **注意**：子应用发送数据给主应用时，无需传递`appName`参数；而主应用发送数据给子应用时，则需通过`appName`参数来指定某个具体子应用名称。
+> ⚠**注意**：**子**应用发送数据给主应用时，**无需**传递`appName`参数；而**主**应用发送数据给子应用时，则**需**通过`appName`参数来指定某个具体子应用名称。同理，清空当前**子**应用发送给主应用的数据时，**无需**传递`appName`参数；而清空**主**应用发送给子应用的数据时，则**需**通过`appName`参数来指定某个具体子应用名称。
 
 ## 可直接引入的方法
 
