@@ -1,0 +1,20 @@
+{
+  "name": "v-micro-app-plugin",
+  "version": "1.0.0",
+  "description": "v-micro-app-plugin是一款基于MicroApp的微前端插件，实现快速安装使用。",
+  "author": "Vivien",
+  "license": "MIT",
+  "main": "./dist/v-micro-app-plugin.js",
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [
+    "micro-app",
+    "micro-frontend",
+    "plugin"
+  ],
+  "dependencies": {
+    "@micro-zoe/micro-app": "1.0.0-rc.6",
+    "vite": "^5.4.0"
+  }
+}
