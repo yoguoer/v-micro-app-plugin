@@ -279,3 +279,125 @@ interface MessageParamsType {
 > })
 > // 将会输出当前主应用配置信息，以及其包含的子应用配置信息
 > ```
+
+## 其它
+
+​	为了照顾到一些微前端小白，在这里，我附上一些必要的、可能会有所帮助的信息。
+
+### 配置路由信息
+
+ 有了主子应用之后，我们就需要**在主应用中**给子应用配置路由信息，这里一共有 2 个子应用，我们为它们分别进行配置。
+
+::: tip 资源地址
+
+ 微前端插件 v-micro-app-plugin 源码地址：https://github.com/yoguoer/v-micro-app-plugin.git
+
+ 用该插件搭建的的示例项目 vMicroVerseHub 源码地址：https://github.com/yoguoer/vMicroVerseHub.git
+
+:::
+
+- appFirst：
+
+```typescript
+import microAppSetting from '@/settings/microAppSetting'
+
+export default {
+  path: '/appFirst',
+  name: 'appFirst',
+  component: Layout,
+  order: 1,
+  hidden: false,
+  meta: {
+    title: 'appFirst',
+    hideBreadcrumb: false,
+    icon: Document,
+    microAppOptions: microAppSetting.subAppConfigs!['appFirst']
+  }
+}
+```
+
+- appSecond：
+
+```typescript
+import microAppSetting from '@/settings/microAppSetting'
+
+export default {
+  path: '/appSecond',
+  name: 'appSecond',
+  component: Layout,
+  order: 2,
+  hidden: false,
+  
+  meta: {
+    title: 'appSecond',
+    hideBreadcrumb: false,
+    icon: Document,
+    microAppOptions: microAppSetting.subAppConfigs!['appSecond'],
+  }
+}
+```
+
+### 封装 MicroAppContainer 
+
+ 众所周知，路由切换时，可以给`<router-view />`填充上对应路径的内容，同理，microApp中的`<micro-app></micro-app>`也有同样的功能。我们可以对其进行二次封装，结合`v-if`，以便于根据是路由指向的是子应用，还是本系统自由模块，来判断究竟是渲染微应用视图，还是渲染普通视图。
+
+ 为了达到这个目的，我们可以新建一个 MicroAppContainer 文件夹，在其中创建一个`index.vue`，然后键入以下内容：
+
+```typescript
+<template>
+  <div :class="[`${prefixCls}-container`]">
+    <!-- name：应用名称, url：应用地址 -->
+    <micro-app v-bind="options" :name="options.name" keep-alive></micro-app>
+  </div>
+</template>
+<script setup lang="ts">
+import { watch } from "vue";
+
+const props = defineProps<{
+  options: {
+    [key: string]: any;
+  };
+}>();
+
+let prefixCls = props.options.name
+
+watch(
+  () => props.options,
+  (newValue) => {
+    prefixCls = newValue.name
+  },
+  { immediate: true, deep: true }
+);
+</script>
+<style></style>
+```
+
+> **⚠注意：**keep-alive 属性可根据需要决定是否设置。
+
+### 区分是否微应用视图
+
+- 在你需要加载子应用页面的地方：
+
+```html
+        <div :class="[`${prefixCls}-viewer-microapp`]" v-if="isMicroAppView">
+          <MicroAppContainer :options="microAppOptions" />
+        </div>
+        <div v-else>
+          <router-view />
+        </div>
+```
+
+- 一些必要的逻辑语句：
+
+```typescript
+import { watchEffect, ref } from 'vue'
+import { useRoute } from 'vue-router'
+const route = useRoute()
+
+let isMicroAppView: Ref = ref(false)
+let microAppOptions: Ref = ref({})
+watchEffect(async () => {
+  microAppOptions.value = route.meta.microAppOptions
+  isMicroAppView.value = !isNullOrUnDef(microAppOptions.value) && !isEmpty(microAppOptions.value)
+})
+```
