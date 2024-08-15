@@ -46,7 +46,7 @@ export function MicroAppBaseRoute(): string {
 }
 
 /**
- * 子应用的基础路由
+ * 子应用的publicPath目录
  * @returns
  */
 export function MicroAppPublicPath(): string {

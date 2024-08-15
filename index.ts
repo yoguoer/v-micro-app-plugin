@@ -18,7 +18,7 @@ async function initMyMicroApp(app: object, options: microAppConfig, router?: any
     // 等待导入appConfigs.ts并启动microApp  
     microApp.start(getMainAppConfigs());  
   } else {
-    console.log(`🍍 ${options.projectName}为子应用, 注册子应用`,`✨ window`, window)
+    console.log(`🍍 ${options.projectName}为子应用, 注册子应用`)
 
     // 为子应用时, 注册子应用相关方法
     if (window) {
@@ -32,18 +32,19 @@ async function initMyMicroApp(app: object, options: microAppConfig, router?: any
 
   const microAppUtils = await import('./src/utils.ts')
   const { getMicroApp, isBaseApp, isMicroApp } = microAppUtils.default
-  
+
   initVueRouter(router)
   const microAppInst =  getMicroApp()
   
   console.log('===🎉🎉 microApp初始化完成 🎉🎉==', microAppInst)
-  console.log('🚩当前应用为：', isBaseApp ? '主应用' : '子应用', isMicroApp ? '微前端环境' : '不在微前端环境')
+  console.log('🚩当前：', isMicroApp ? '在微前端环境' : '不在微前端环境', isBaseApp ? '主应用' : '子应用', )
 
   return microAppInst
 }
 export default initMyMicroApp
 
 export { default as microAppSettingInstance } from './src/settings/microAppSetting.ts' // 许多种方法
+export * from './src/utils.ts'
 export { default as microAppUtils } from './src/utils.ts'
 export * from './src/utils/is.ts' // 许多种方法
 export { default as renderAllSubApp } from './src/render.ts' // renderAllSubApp()方法

@@ -6,8 +6,6 @@ const _microAppSetting = class _microAppSetting {
     this.setting = {
       projectName: "",
       // 项目名称
-      microAppUrl: {},
-      // 微前端配置
       subAppConfigs: {},
       // 子应用配置
       isBaseApp: true,
@@ -34,7 +32,6 @@ const _microAppSetting = class _microAppSetting {
         this.setting[key] = initValue[key];
       }
     }
-    console.log("✅全局存储所有初始化参数:", this.setting);
   }
   // 获取全局配置  
   getConfig(key) {
@@ -6750,19 +6747,19 @@ function getMainAppConfigs() {
     iframe: true,
     lifeCycles: {
       created(e, appName) {
-        console.log(`💨子应用${appName}被创建！`);
+        console.log(`💨子应用【${appName}】被创建！`);
       },
       beforemount(e, appName) {
-        console.log(`💥子应用${appName}即将渲染！`);
+        console.log(`💥子应用【${appName}】即将渲染！`);
       },
       mounted(e, appName) {
-        console.log(`💯子应用${appName}已经渲染完成！`);
+        console.log(`💯子应用【${appName}】已经渲染完成！`);
       },
       unmount(e, appName) {
-        console.log(`❎子应用${appName}已经卸载！`);
+        console.log(`❎子应用【${appName}】已经卸载！`);
       },
       error(e, appName) {
-        console.log(`❌子应用${appName}加载出错！`);
+        console.log(`❌子应用【${appName}】加载出错！`);
       }
     }
   };
@@ -6920,9 +6917,9 @@ function renderAllSubApp() {
   for (let appName in subAppConfigs) {
     microApp.renderApp(subAppConfigs[appName]).then((result) => {
       if (result) {
-        console.log(`💯子应用${appName}渲染成功！`);
+        console.log(`💯子应用【${appName}】渲染成功！`);
       } else {
-        console.log(`❌子应用${appName}渲染失败！`);
+        console.log(`❌子应用【${appName}】渲染失败！`);
       }
     });
   }
@@ -7039,7 +7036,7 @@ async function initMyMicroApp(app, options, router2, store) {
     microApp.router.setBaseAppRouter(router2);
     microApp.start(getMainAppConfigs());
   } else {
-    console.log(`🍍 ${options.projectName}为子应用, 注册子应用`, `✨ window`, window);
+    console.log(`🍍 ${options.projectName}为子应用, 注册子应用`);
     if (window) {
       window.unmount = () => {
         app.unmount();
@@ -7052,11 +7049,17 @@ async function initMyMicroApp(app, options, router2, store) {
   initVueRouter(router2);
   const microAppInst = getMicroApp2();
   console.log("===🎉🎉 microApp初始化完成 🎉🎉==", microAppInst);
-  console.log("🚩当前应用为：", isBaseApp2 ? "主应用" : "子应用", isMicroApp2 ? "微前端环境" : "不在微前端环境");
+  console.log("🚩当前：", isMicroApp2 ? "在微前端环境" : "不在微前端环境", isBaseApp2 ? "主应用" : "子应用");
   return microAppInst;
 }
+exports.IsBaseApp = IsBaseApp;
+exports.IsMicroApp = IsMicroApp;
+exports.MicroAppBaseRoute = MicroAppBaseRoute;
+exports.MicroAppName = MicroAppName;
+exports.MicroAppPublicPath = MicroAppPublicPath;
 exports.default = initMyMicroApp;
 exports.getMainAppConfigs = getMainAppConfigs;
+exports.getMicroApp = getMicroApp$1;
 exports.getRounterInstance = getRounterInstance;
 exports.getSubAppConfigs = getSubAppConfigs;
 exports.initVueRouter = initVueRouter;

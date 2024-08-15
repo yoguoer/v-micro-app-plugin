@@ -3,11 +3,6 @@
  *   {
  *    子应用名称： 子应用选项
  *   }
- * 举个例子：
- * 'subApp1': {
- *    name: 'subApp1',
- *    url: ProjectSetting.microAppUrl['subApp1']
- *  },
  */
 import microAppSetting from './settings/microAppSetting.ts'
 
@@ -25,19 +20,19 @@ export function getMainAppConfigs(): { [key: string]: any } {
     iframe: true,
     lifeCycles: {
       created(e, appName) {
-        console.log(`💨子应用${appName}被创建！`)
+        console.log(`💨子应用【${appName}】被创建！`)
       },
       beforemount(e, appName) {
-        console.log(`💥子应用${appName}即将渲染！`)
+        console.log(`💥子应用【${appName}】即将渲染！`)
       },
       mounted(e, appName) {
-        console.log(`💯子应用${appName}已经渲染完成！`)
+        console.log(`💯子应用【${appName}】已经渲染完成！`)
       },
       unmount(e, appName) {
-        console.log(`❎子应用${appName}已经卸载！`)
+        console.log(`❎子应用【${appName}】已经卸载！`)
       },
       error(e, appName) {
-        console.log(`❌子应用${appName}加载出错！`)
+        console.log(`❌子应用【${appName}】加载出错！`)
       }
     }
    }

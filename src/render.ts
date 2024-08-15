@@ -15,9 +15,9 @@ export default function renderAllSubApp() {
   for (let appName in subAppConfigs) {
     microApp.renderApp(subAppConfigs[appName]).then((result) => {
       if (result) {
-        console.log(`💯子应用${appName}渲染成功！`)
+        console.log(`💯子应用【${appName}】渲染成功！`)
       } else {
-        console.log(`❌子应用${appName}渲染失败！`)
+        console.log(`❌子应用【${appName}】渲染失败！`)
       }
     })
   }
