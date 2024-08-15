@@ -7,7 +7,7 @@ import { getSubAppConfigs } from './appConfigs.ts'
  */
 export default function renderAllSubApp() {
   const subAppConfigs = getSubAppConfigs()
-  
+
   if (isEmpty(subAppConfigs)) {
     return Error('❗未配置子应用。')
   }

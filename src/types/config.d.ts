@@ -2,6 +2,8 @@
 export interface microAppConfig {
     projectName?: string; // 项目名称
     subAppConfigs?: Object; // 子应用配置
-    isBaseApp?: boolean; // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
-    basePath?: string; // 打包路径（env.VITE_BASE_PATH）
+    isBaseApp?: boolean; // 是否为 micro-app 主应用
+    basePath?: string; // 打包路径
+    disableSandbox?: boolean; // 是否禁用沙箱
+    iframe?: boolean; // 是否使用 iframe
 }

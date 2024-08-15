@@ -1,6 +1,6 @@
 {
   "name": "v-micro-app-plugin",
-  "version": "1.0.28",
+  "version": "1.0.60",
   "description": "v-micro-app-plugin是一款基于MicroApp的微前端插件，实现快速安装使用。",
   "author": "Vivien",
   "license": "MIT",

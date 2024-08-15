@@ -7,9 +7,6 @@
    docs: https://micro-zoe.github.io/micro-app/docs.html#/zh-cn/router?id=%e5%af%bc%e8%88%aa
  */
 import microApp from '@micro-zoe/micro-app'
-import microAppUtils from './utils.ts'
-
-const { isMicroApp, isBaseApp } = microAppUtils
 
 let VueRouter = null
 export function initVueRouter(router: any) {
@@ -23,7 +20,10 @@ export function initVueRouter(router: any) {
  * 获取 Microapp 路由实例
  * @returns
  */
-export function getRounterInstance() {
+export async function getRounterInstance() {
+  const microAppUtils = await import('./utils.ts')
+  const { isMicroApp, isBaseApp } = microAppUtils.default
+
   if (isMicroApp() && isBaseApp()) {
     return microApp.router
   } else {

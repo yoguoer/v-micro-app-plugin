@@ -49,10 +49,12 @@ yarn add v-micro-app-plugin
 
 ```typescript
 export interface microAppConfig {
-    projectName?: string; 
-    subAppConfigs?: Object; 
-    isBaseApp?: boolean; 
-    basePath?: string; 
+    projectName?: string; // 项目名称
+    subAppConfigs?: Object; // 子应用配置
+    isBaseApp?: boolean; // 是否为 micro-app 主应用
+    basePath?: string; // 打包路径
+    disableSandbox?: boolean; // 是否禁用沙箱
+    iframe?: boolean; // 是否使用 iframe
 }
 ```
 
@@ -60,12 +62,14 @@ export interface microAppConfig {
 
 ​	在配置 `v-micro-app-plugin` 时，你需要准备一个符合条件的  `options` 对象，该对象包含以下参数：
 
-| 参数名        | 介绍                                 | 类型    |
-| ------------- | ------------------------------------ | ------- |
-| projectName   | 项目名称                             | string  |
-| subAppConfigs | 子应用配置对象，包含多个子应用的配置 | Object  |
-| isBaseApp     | 标记当前应用是否为主应用             | boolean |
-| basePath      | 打包路径或其他基础路径               | string  |
+| 参数名         | 介绍                                    | 类型    |
+| -------------- | --------------------------------------- | ------- |
+| projectName    | 项目名称                                | string  |
+| subAppConfigs  | 子应用配置对象，包含多个子应用的配置    | Object  |
+| isBaseApp      | 标记当前应用是否为主应用（默认为 true） | boolean |
+| basePath       | 打包路径或其他基础路径                  | string  |
+| disableSandbox | 是否禁用沙箱（默认为 false）            | boolean |
+| iframe         | 是否使用 iframe（默认为 true）          | boolean |
 
 注意：`subAppConfigs` 对象中每个子应用的配置包括：
 
@@ -78,7 +82,7 @@ export interface microAppConfig {
 
 ​	在你的主应用或目标系统的入口文件中，引入 `v-micro-app-plugin`。
 
-```
+```typescript
 import initMyMicroApp from 'v-micro-app-plugin'
 ```
 
@@ -101,6 +105,8 @@ const options = {
   },  
   isBaseApp: true, // 标记当前应用为主应用
   basePath: '/vivien', // 打包路径或其他基础路径 
+  disableSandbox: false, // 是否禁用沙箱
+  iframe: true, // 是否使用 iframe
 };  
 
 // 初始化微前端插件  
@@ -141,14 +147,113 @@ const options = {
   },  
   isBaseApp: true, // 是否为主应用  
   basePath: '/vivien', // 打包路径或其他基础路径  
+  disableSandbox: false, // 是否禁用沙箱
+  iframe: true, // 是否使用 iframe
 };  
   
 await initMyMicroApp(app, options);
 ```
 
-# 内置对象和方法
+# 对象和方法
 
 ​	`v-micro-app-plugin` 提供了一系列可供使用的方法和对象：
+
+## microAppUtils 对象
+
+​	该对象用于获取当前应用的一些基本信息，提供多个方法。具体如下：
+
+| 方法名                | 介绍                       | 参数          |
+| --------------------- | -------------------------- | ------------- |
+| isMicroApp            | 判断应用是否在微前端环境中 | -             |
+| isBaseApp             | 判断应用是否是主应用       | -             |
+| getMicroAppBaseRoute  | 获取子应用的基础路由       | -             |
+| getMicroAppPublicPath | 获取子应用的publicPath目录 | -             |
+| getMicroAppName       | 获取当前应用名称           | name?: string |
+| getMicroApp           | 返回当前应用实例           | -             |
+
+> 使用示例：
+>
+> ```typescript
+> import { microAppUtils } from "v-micro-app-plugin";
+> 
+> const { isMicroApp, isBaseApp } = microAppUtils;
+> import { onBeforeMount } from "vue";
+> 
+> onBeforeMount(() => {
+>   	console.log('是否在微前端环境中：',isMicroApp(), '是否为主应用：'isBaseApp())
+> })
+> ```
+
+## getMicroAppMessage 方法
+
+​	此方法直接返回一个通信实例对象，该对象用于实现应用之间的通信，提供一系列 API 方便使用。具体如下：
+
+| 方法名             | 介绍                               | 参数                                           |
+| ------------------ | ---------------------------------- | ---------------------------------------------- |
+| sendMessage        | 发送数据                           | { data, appName, callback }: MessageParamsType |
+| sendGlobal         | 全局发送数据                       | { data, appName, callback }: MessageParamsType |
+| forceSend          | 强制发送数据，无论数据是否变化     | { data, appName, callback }: MessageParamsType |
+| forceSendGlobal    | 强制全局发送数据，无论数据是否变化 | { data, appName, callback }: MessageParamsType |
+| getMessage         | 获取数据                           | appName?: string                               |
+| getGlobalMessage   | 获取全局数据                       | -                                              |
+| clearMessage       | 清除数据                           | appName: string                                |
+| clearGlobalMessage | 清除全局数据                       | -                                              |
+
+注意：`MessageParamsType`的类型声明如下：
+
+```typescript
+interface MessageParamsType {
+  data: object // 发送的数据内容
+  appName?: string // 接收数据应用名称,当且仅当主应用发送数据时需要传入
+  callback?: Function // 回调函数
+}
+```
+
+> 使用示例：
+>
+> 在子应用 appFirst 中，使用 sendMessage 给子应用发出数据，使用发出 sendGlobal 全局数据：
+>
+> ```typescript
+> import { getMicroAppMessage } from "v-micro-app-plugin";
+> 
+> function testSendMessage(){
+>   const microAppMessage = getMicroAppMessage()
+>   microAppMessage.sendMessage({
+>     data: { type: 'sendMessage', value: 'appFirst给主应用发送数据~' },
+>     callback: () => {
+>       console.log('使用sendMessage发送数据成功，执行回调！')
+>     }
+>   })
+>   microAppMessage.sendGlobal({
+>     data: { type: 'sendGlobal', value: 'appFirst给全局发送数据~' },
+>     callback: () => {
+>       console.log('使用sendGlobal发送数据成功，执行回调！')
+>     }
+>   })
+>   setTimeout(() => {
+>       console.log(getGlobalMessage:", microAppMessage.getGlobalMessage(),"getMessage:", microAppMessage.getMessage())
+>   },3000)
+> }
+> // 结果发现：子应用 => 可以接收到全局信息，但接收不到自己发给主应用的信息。
+> ```
+>
+> 在主应用中，使用 getMessage 接收子应用发来的数据，使用 getGlobalMessage 接收全局数据：
+>
+> ```typescript
+> import { getMicroAppMessage } from "v-micro-app-plugin";
+> 
+> function testGetMessage() {
+>   const microAppMessage = getMicroAppMessage()
+>   setTimeout(() => {
+>     console.log('getGlobalMessage:',microAppMessage.getGlobalMessage(),'getMessage:',microAppMessage.getMessage('appFirst'))
+>   }, 3000)
+> }
+> // 结果发现：主应用 => 可以接收到全局信息，也可以收到 appFirst 发来的信息。
+> ```
+>
+> **Tip**：其它通信 API 方法的使用方式同上。
+>
+> **注意**：子应用发送数据给主应用时，无需传递`appName`参数；而主应用发送数据给子应用时，则需通过`appName`参数来指定某个具体子应用名称。
 
 ## 可直接引入的方法
 
@@ -159,47 +264,14 @@ await initMyMicroApp(app, options);
 | getRounterInstance | 获取 Microapp 路由实例 | -    |
 | renderAllSubApp    | 渲染所有子应用         | -    |
 
-## microAppUtils 对象
-
-​	该对象用于获取当前应用的一些基本信息，一共包含 3 个属性和 2 个方法。具体如下：
-
-- ### 属性
-
-| 属性名             | 介绍                       | 返回值类型 |
-| ------------------ | -------------------------- | ---------- |
-| isMicroApp         | 判断应用是否在微前端环境中 | boolean    |
-| isBaseApp          | 判断应用是否是主应用       | boolean    |
-| microAppBaseRoute  | 子应用的基础路由           | string     |
-| microAppPublicPath | 子应用的publicPath目录     | string     |
-
-- ### 方法
-
-| 方法名          | 介绍             | 参数          |
-| --------------- | ---------------- | ------------- |
-| getMicroAppName | 获取当前应用名称 | name?: string |
-| getMicroApp     | 返回当前应用实例 | -             |
-
-## microAppMessage 对象
-
-​	该对象用于实现应用之间的通信，提供一系列 API 方便使用。具体如下：
-
-| 方法名             | 介绍                               | 参数                                           |
-| ------------------ | ---------------------------------- | ---------------------------------------------- |
-| sendMessage        | 发送数据                           | { data, appName, callback }: MessageParamsType |
-| sendGlobal         | 全局发送数据                       | data                                           |
-| forceSend          | 强制发送数据，无论数据是否变化     | { data, appName, callback }: MessageParamsType |
-| forceSendGlobal    | 强制全局发送数据，无论数据是否变化 | data: object, callback?: Function              |
-| getMessage         | 获取数据                           | appName?: string                               |
-| getGlobalMessage   | 获取全局数据                       | -                                              |
-| clearMessage       | 清除数据                           | appName: string                                |
-| clearGlobalMessage | 清除全局数据                       | -                                              |
-
-注意：`MessageParamsType`的类型声明如下：
-
-```typescript
-interface MessageParamsType {
-  data: object // 发送数据
-  appName?: string // 接收数据应用名称,仅当主应用发送时需要传入
-  callback?: Function // 回调函数
-}
-```
+> 使用示例：
+>
+> ```typescript
+> import { getMainAppConfigs, getSubAppConfigs } from "v-micro-app-plugin";
+> import { onBeforeMount } from "vue";
+> 
+> onBeforeMount(() => {
+> 	console.log('使用示例：',getMainAppConfigs(), getSubAppConfigs())
+> })
+> // 将会输出当前主应用配置信息，以及其包含的子应用配置信息
+> ```

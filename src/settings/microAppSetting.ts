@@ -5,13 +5,15 @@ import type { microAppConfig } from "../types/config"
 class microAppSetting {
     // 定义静态变量，用于存储单例实例
     private static instance: microAppSetting | null = null;
-    
+
     // 定义私有变量，用于存储配置信息
     private setting: microAppConfig = {
         projectName: '', // 项目名称
         subAppConfigs: {}, // 子应用配置
-        isBaseApp: true, // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
-        basePath: '', // 打包路径（env.VITE_BASE_PATH）
+        isBaseApp: true, // 是否为 micro-app 主应用
+        basePath: '', // 打包路径
+        disableSandbox: false, // 是否禁用沙箱
+        iframe: true, // 是否使用 iframe
     }
 
     // 私有构造函数，确保外部不能直接通过new创建实例  
@@ -42,7 +44,7 @@ class microAppSetting {
                 this.setting[key] = initValue[key];
             }
         }
-        console.log('✅全局配置microAppSetting成功',this.setting)
+        console.log('✅全局配置microAppSetting成功', this.setting)
     }
 
     // 获取全局配置  
