@@ -284,17 +284,16 @@ interface MessageParamsType {
 
 ​	为了照顾到一些微前端小白，在这里，我附上一些必要的、可能会有所帮助的信息。
 
+> **资源地址**
+>
+>  微前端插件 v-micro-app-plugin 源码地址：https://github.com/yoguoer/v-micro-app-plugin.git
+>
+>  用该插件搭建的的示例项目 vMicroVerseHub 源码地址：https://github.com/yoguoer/vMicroVerseHub.git
+>
+
 ### 配置路由信息
 
  有了主子应用之后，我们就需要**在主应用中**给子应用配置路由信息，这里一共有 2 个子应用，我们为它们分别进行配置。
-
-::: tip 资源地址
-
- 微前端插件 v-micro-app-plugin 源码地址：https://github.com/yoguoer/v-micro-app-plugin.git
-
- 用该插件搭建的的示例项目 vMicroVerseHub 源码地址：https://github.com/yoguoer/vMicroVerseHub.git
-
-:::
 
 - appFirst：
 
