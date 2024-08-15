@@ -134,7 +134,7 @@ class MicroAppMessage {
 
 const microAppMessage = new MicroAppMessage(
   getMicroApp(),
-  isBaseApp,
+  isBaseApp(),
   getMainAppConfigs()['disable-sandbox'] || false
 )
 export default microAppMessage

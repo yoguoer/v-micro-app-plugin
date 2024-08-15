@@ -24,7 +24,7 @@ export function initVueRouter(router: any) {
  * @returns
  */
 export function getRounterInstance() {
-  if (isMicroApp && isBaseApp) {
+  if (isMicroApp() && isBaseApp()) {
     return microApp.router
   } else {
     // 获取主应用路由

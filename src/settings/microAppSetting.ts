@@ -5,8 +5,9 @@ import type { microAppConfig } from "../types/config"
 class microAppSetting {
     // 定义静态变量，用于存储单例实例
     private static instance: microAppSetting | null = null;
+    
     // 定义私有变量，用于存储配置信息
-    private readonly setting: microAppConfig = {
+    private setting: microAppConfig = {
         projectName: '', // 项目名称
         subAppConfigs: {}, // 子应用配置
         isBaseApp: true, // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
@@ -41,7 +42,9 @@ class microAppSetting {
                 this.setting[key] = initValue[key];
             }
         }
+        console.log('✅全局配置microAppSetting成功',this.setting)
     }
+
     // 获取全局配置  
     public getConfig(key: keyof microAppConfig): any {
         // 返回对应的配置项

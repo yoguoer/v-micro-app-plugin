@@ -10,7 +10,7 @@ import microAppSetting from './settings/microAppSetting.ts'
  * @returns
  */
 export function IsMicroApp(): boolean {
-  const isBaseApp = microAppSetting.getConfig('isBaseApp').toString() === 'true'
+  const isBaseApp = microAppSetting.getConfig('isBaseApp')
   return isBaseApp ? true : window.__MICRO_APP_ENVIRONMENT__ || false
 }
 
@@ -19,7 +19,7 @@ export function IsMicroApp(): boolean {
  * @returns
  */
 export function IsBaseApp(): boolean {
-  return microAppSetting.getConfig('isBaseApp').toString() === 'true'
+  return microAppSetting.getConfig('isBaseApp')
 }
 
 /**
@@ -67,10 +67,10 @@ export function getMicroApp(): object {
 }
 
 export default {
-  isMicroApp: IsMicroApp(),
-  isBaseApp: IsBaseApp(),
-  microAppBaseRoute: MicroAppBaseRoute(),
-  microAppPublicPath: MicroAppPublicPath(),
+  isMicroApp: IsMicroApp,
+  isBaseApp: IsBaseApp,
+  getMicroAppBaseRoute: MicroAppBaseRoute,
+  getMicroAppPublicPath: MicroAppPublicPath,
   getMicroAppName: MicroAppName,
   getMicroApp: getMicroApp
-}
+};

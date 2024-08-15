@@ -1,44 +1,3 @@
-const _microAppSetting = class _microAppSetting {
-  // 私有构造函数，确保外部不能直接通过new创建实例  
-  constructor() {
-    this.setting = {
-      projectName: "",
-      // 项目名称
-      subAppConfigs: {},
-      // 子应用配置
-      isBaseApp: true,
-      // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
-      basePath: ""
-      // 打包路径（env.VITE_BASE_PATH）
-    };
-  }
-  // 获取单例实例  
-  static getInstance() {
-    if (!_microAppSetting.instance || _microAppSetting.instance == null) {
-      _microAppSetting.instance = new _microAppSetting();
-    }
-    return _microAppSetting.instance;
-  }
-  // 设置单个全局配置 
-  setConfig(key, value) {
-    this.setting[key] = value;
-  }
-  // 一次性设置全局配置  
-  setAllConfig(initValue) {
-    for (const key in initValue) {
-      if (key in this.setting) {
-        this.setting[key] = initValue[key];
-      }
-    }
-  }
-  // 获取全局配置  
-  getConfig(key) {
-    return this.setting[key];
-  }
-};
-_microAppSetting.instance = null;
-let microAppSetting = _microAppSetting;
-const microAppSetting$1 = microAppSetting.getInstance();
 const version = "1.0.0-rc.6";
 const isBrowser = typeof window !== "undefined";
 const globalThis = typeof global !== "undefined" ? global : typeof window !== "undefined" ? window : typeof self !== "undefined" ? self : Function("return this")();
@@ -53,37 +12,37 @@ const toTypeString = (value) => rawToString.call(value);
 function isUndefined(target) {
   return target === void 0;
 }
-function isNull$1(target) {
+function isNull(target) {
   return target === null;
 }
 function isString$1(target) {
   return typeof target === "string";
 }
-function isBoolean$1(target) {
+function isBoolean(target) {
   return typeof target === "boolean";
 }
-function isNumber$1(target) {
+function isNumber(target) {
   return typeof target === "number";
 }
-function isFunction$1(target) {
+function isFunction(target) {
   return typeof target === "function";
 }
 function isPlainObject(target) {
   return toTypeString(target) === "[object Object]";
 }
 function isObject$1(target) {
-  return !isNull$1(target) && typeof target === "object";
+  return !isNull(target) && typeof target === "object";
 }
-function isPromise$1(target) {
+function isPromise(target) {
   return toTypeString(target) === "[object Promise]";
 }
 function isBoundFunction(target) {
   var _a;
-  return isFunction$1(target) && ((_a = target.name) === null || _a === void 0 ? void 0 : _a.indexOf("bound ")) === 0 && !target.hasOwnProperty("prototype");
+  return isFunction(target) && ((_a = target.name) === null || _a === void 0 ? void 0 : _a.indexOf("bound ")) === 0 && !target.hasOwnProperty("prototype");
 }
 function isConstructor(target) {
   var _a;
-  if (isFunction$1(target)) {
+  if (isFunction(target)) {
     const targetStr = target.toString();
     return ((_a = target.prototype) === null || _a === void 0 ? void 0 : _a.constructor) === target && Object.getOwnPropertyNames(target.prototype).length > 1 || /^function\s+[A-Z]/.test(targetStr) || /^class\s+/.test(targetStr);
   }
@@ -96,13 +55,13 @@ function isURL(target) {
   var _a;
   return target instanceof URL || !!((_a = target) === null || _a === void 0 ? void 0 : _a.href);
 }
-function isElement$1(target) {
+function isElement(target) {
   var _a;
   return target instanceof Element || isString$1((_a = target) === null || _a === void 0 ? void 0 : _a.tagName);
 }
 function isNode(target) {
   var _a;
-  return target instanceof Node || isNumber$1((_a = target) === null || _a === void 0 ? void 0 : _a.nodeType);
+  return target instanceof Node || isNumber((_a = target) === null || _a === void 0 ? void 0 : _a.nodeType);
 }
 function isLinkElement(target) {
   return toTypeString(target) === "[object HTMLLinkElement]";
@@ -129,10 +88,10 @@ function isDocumentFragment(target) {
   return toTypeString(target) === "[object DocumentFragment]";
 }
 function isMicroAppBody(target) {
-  return isElement$1(target) && target.tagName.toUpperCase() === "MICRO-APP-BODY";
+  return isElement(target) && target.tagName.toUpperCase() === "MICRO-APP-BODY";
 }
 function isMicroAppHead(target) {
-  return isElement$1(target) && target.tagName.toUpperCase() === "MICRO-APP-HEAD";
+  return isElement(target) && target.tagName.toUpperCase() === "MICRO-APP-HEAD";
 }
 function isProxyDocument(target) {
   return toTypeString(target) === "[object ProxyDocument]";
@@ -237,7 +196,7 @@ function promiseStream(promiseList, successCb, errorCb, finallyCb) {
       finallyCb();
   }
   promiseList.forEach((p, i) => {
-    if (isPromise$1(p)) {
+    if (isPromise(p)) {
       p.then((res) => {
         successCb({ data: res, index: i });
         isFinished();
@@ -374,14 +333,14 @@ function stringifyQuery(queryObject) {
   let result = "";
   for (const key in queryObject) {
     const value = queryObject[key];
-    if (isNull$1(value)) {
+    if (isNull(value)) {
       result += (result.length ? "&" : "") + key;
     } else {
       const valueList = isArray$1(value) ? value : [value];
       valueList.forEach((value2) => {
         if (!isUndefined(value2)) {
           result += (result.length ? "&" : "") + key;
-          if (!isNull$1(value2))
+          if (!isNull(value2))
             result += "=" + value2;
         }
       });
@@ -450,7 +409,7 @@ function isInlineScript(address) {
 }
 function execMicroAppGlobalHook(fn, appName, hookName, ...args) {
   try {
-    isFunction$1(fn) && fn(...args);
+    isFunction(fn) && fn(...args);
   } catch (e) {
     logError(`An error occurred in app ${appName} window.${hookName} 
 `, null, e);
@@ -464,7 +423,7 @@ function clearDOM($dom) {
 function instanceOf(instance, constructor) {
   if (instance === null || instance === void 0) {
     return false;
-  } else if (!isFunction$1(constructor)) {
+  } else if (!isFunction(constructor)) {
     throw new TypeError("Right-hand side of 'instanceof' is not callable");
   }
   let proto = Object.getPrototypeOf(instance);
@@ -514,7 +473,7 @@ function dispatchLifecyclesEvent(element, appName, lifecycleName, error) {
     detail
   });
   formatEventInfo(event, element);
-  if (isFunction$1((_a = microApp.options.lifeCycles) === null || _a === void 0 ? void 0 : _a[lifecycleName])) {
+  if (isFunction((_a = microApp.options.lifeCycles) === null || _a === void 0 ? void 0 : _a[lifecycleName])) {
     microApp.options.lifeCycles[lifecycleName](event, appName);
   }
   element.dispatchEvent(event);
@@ -528,7 +487,7 @@ function dispatchCustomEventToMicroApp(app, eventName, detail = {}) {
 }
 function fetchSource(url, appName = null, options = {}) {
   removeDomScope();
-  if (isFunction$1(microApp.options.fetch)) {
+  if (isFunction(microApp.options.fetch)) {
     return microApp.options.fetch(url, options, appName);
   }
   return window.fetch(url, options).then((res) => {
@@ -581,7 +540,7 @@ class HTMLLoader {
     ((_a = plugins.modules) === null || _a === void 0 ? void 0 : _a[appName]) && mergedPlugins.push(...plugins.modules[appName]);
     if (mergedPlugins.length > 0) {
       return mergedPlugins.reduce((preCode, plugin) => {
-        if (isPlainObject(plugin) && isFunction$1(plugin.processHtml)) {
+        if (isPlainObject(plugin) && isFunction(plugin.processHtml)) {
           return plugin.processHtml(preCode, url);
         }
         return preCode;
@@ -957,7 +916,7 @@ function eventHandler(event, element) {
 function dispatchOnLoadEvent(element) {
   const event = new CustomEvent("load");
   eventHandler(event, element);
-  if (isFunction$1(element.onload)) {
+  if (isFunction(element.onload)) {
     element.onload(event);
   } else {
     element.dispatchEvent(event);
@@ -966,7 +925,7 @@ function dispatchOnLoadEvent(element) {
 function dispatchOnErrorEvent(element) {
   const event = new CustomEvent("error");
   eventHandler(event, element);
-  if (isFunction$1(element.onerror)) {
+  if (isFunction(element.onerror)) {
     element.onerror(event);
   } else {
     element.dispatchEvent(event);
@@ -1636,7 +1595,7 @@ function processCode(configs, code, address) {
     return code;
   }
   return configs.reduce((preCode, config) => {
-    if (isPlainObject(config) && isFunction$1(config.loader)) {
+    if (isPlainObject(config) && isFunction(config.loader)) {
       return config.loader(preCode, address);
     }
     return preCode;
@@ -1768,7 +1727,7 @@ class EventCenter {
    */
   on(name, f, autoTrigger = false) {
     if (this.isLegalName(name)) {
-      if (!isFunction$1(f)) {
+      if (!isFunction(f)) {
         return logError("event-center: Invalid callback function");
       }
       let eventInfo = this.eventList.get(name);
@@ -1789,7 +1748,7 @@ class EventCenter {
     if (this.isLegalName(name)) {
       const eventInfo = this.eventList.get(name);
       if (eventInfo) {
-        if (isFunction$1(f)) {
+        if (isFunction(f)) {
           eventInfo.callbacks.delete(f);
         } else {
           eventInfo.callbacks.clear();
@@ -1861,7 +1820,7 @@ class EventCenterForGlobal {
    * @param cb listener
    */
   removeGlobalDataListener(cb) {
-    isFunction$1(cb) && eventCenter.off("global", cb);
+    isFunction(cb) && eventCenter.off("global", cb);
   }
   /**
    * dispatch global data
@@ -1869,7 +1828,7 @@ class EventCenterForGlobal {
    */
   setGlobalData(data, nextStep, force) {
     removeDomScope();
-    eventCenter.dispatch("global", data, (resArr) => isFunction$1(nextStep) && nextStep(resArr), force);
+    eventCenter.dispatch("global", data, (resArr) => isFunction(nextStep) && nextStep(resArr), force);
   }
   forceSetGlobalData(data, nextStep) {
     this.setGlobalData(data, nextStep, true);
@@ -1919,7 +1878,7 @@ class EventCenterForBaseApp extends EventCenterForGlobal {
    * @param cb listener
    */
   removeDataListener(appName, cb) {
-    isFunction$1(cb) && eventCenter.off(createEventName(formatAppName(appName), false), cb);
+    isFunction(cb) && eventCenter.off(createEventName(formatAppName(appName), false), cb);
   }
   /**
    * get data from micro app or base app
@@ -1935,7 +1894,7 @@ class EventCenterForBaseApp extends EventCenterForGlobal {
    * @param data data
    */
   setData(appName, data, nextStep, force) {
-    eventCenter.dispatch(createEventName(formatAppName(appName), true), data, (resArr) => isFunction$1(nextStep) && nextStep(resArr), force);
+    eventCenter.dispatch(createEventName(formatAppName(appName), true), data, (resArr) => isFunction(nextStep) && nextStep(resArr), force);
   }
   forceSetData(appName, data, nextStep) {
     this.setData(appName, data, nextStep, true);
@@ -1976,7 +1935,7 @@ class EventCenterForMicroApp extends EventCenterForGlobal {
    * @param cb listener
    */
   removeDataListener(cb) {
-    isFunction$1(cb) && eventCenter.off(createEventName(this.appName, true), cb);
+    isFunction(cb) && eventCenter.off(createEventName(this.appName, true), cb);
   }
   /**
    * get data from base app
@@ -1990,7 +1949,7 @@ class EventCenterForMicroApp extends EventCenterForGlobal {
    */
   dispatch(data, nextStep, force) {
     removeDomScope();
-    eventCenter.dispatch(createEventName(this.appName, false), data, (resArr) => isFunction$1(nextStep) && nextStep(resArr), force, () => {
+    eventCenter.dispatch(createEventName(this.appName, false), data, (resArr) => isFunction(nextStep) && nextStep(resArr), force, () => {
       const app = appInstanceMap.get(this.appName);
       if ((app === null || app === void 0 ? void 0 : app.container) && isPlainObject(data)) {
         const event = new CustomEvent("datachange", {
@@ -2098,17 +2057,17 @@ function initEnvOfNestedApp() {
   }
 }
 function isBoundedFunction(value) {
-  if (isBoolean$1(value.__MICRO_APP_IS_BOUND_FUNCTION__))
+  if (isBoolean(value.__MICRO_APP_IS_BOUND_FUNCTION__))
     return value.__MICRO_APP_IS_BOUND_FUNCTION__;
   return value.__MICRO_APP_IS_BOUND_FUNCTION__ = isBoundFunction(value);
 }
 function isConstructorFunction(value) {
-  if (isBoolean$1(value.__MICRO_APP_IS_CONSTRUCTOR__))
+  if (isBoolean(value.__MICRO_APP_IS_CONSTRUCTOR__))
     return value.__MICRO_APP_IS_CONSTRUCTOR__;
   return value.__MICRO_APP_IS_CONSTRUCTOR__ = isConstructor(value);
 }
 function bindFunctionToRawTarget(value, rawTarget, key = "WINDOW") {
-  if (isFunction$1(value) && !isConstructorFunction(value) && !isBoundedFunction(value) && value.bind) {
+  if (isFunction(value) && !isConstructorFunction(value) && !isBoundedFunction(value) && value.bind) {
     const cacheKey = `__MICRO_APP_BOUND_${key}_FUNCTION__`;
     if (value[cacheKey])
       return value[cacheKey];
@@ -2323,7 +2282,7 @@ function createProxyDocument(appName, sandbox) {
     reset();
   };
   const release = () => {
-    if (isFunction$1(onClickHandler)) {
+    if (isFunction(onClickHandler)) {
       rawRemoveEventListener.call(rawDocument, "click", onClickHandler);
     }
     onClickHandler = null;
@@ -2340,10 +2299,10 @@ function createProxyDocument(appName, sandbox) {
     var _a;
     const builtInProxyProps = /* @__PURE__ */ new Map([
       ["onclick", (value) => {
-        if (isFunction$1(onClickHandler)) {
+        if (isFunction(onClickHandler)) {
           rawRemoveEventListener.call(rawDocument, "click", onClickHandler, false);
         }
-        if (isFunction$1(value)) {
+        if (isFunction(value)) {
           rawAddEventListener.call(rawDocument, "click", value, false);
         }
         onClickHandler = value;
@@ -2861,7 +2820,7 @@ function dispatchPopStateEventToMicroApp(appName, proxyWindow, microAppWindow) {
   const newPopStateEvent = new PopStateEvent("popstate", { state: getMicroState(appName) });
   microAppWindow.dispatchEvent(newPopStateEvent);
   if (!isIframeSandbox(appName)) {
-    isFunction$1(proxyWindow.onpopstate) && proxyWindow.onpopstate(newPopStateEvent);
+    isFunction(proxyWindow.onpopstate) && proxyWindow.onpopstate(newPopStateEvent);
   }
 }
 function dispatchHashChangeEventToMicroApp(appName, proxyWindow, microAppWindow, oldHref) {
@@ -2871,7 +2830,7 @@ function dispatchHashChangeEventToMicroApp(appName, proxyWindow, microAppWindow,
   });
   microAppWindow.dispatchEvent(newHashChangeEvent);
   if (!isIframeSandbox(appName)) {
-    isFunction$1(proxyWindow.onhashchange) && proxyWindow.onhashchange(newHashChangeEvent);
+    isFunction(proxyWindow.onhashchange) && proxyWindow.onhashchange(newHashChangeEvent);
   }
 }
 function dispatchNativePopStateEvent(onlyForBrowser) {
@@ -2901,7 +2860,7 @@ function createMicroHistory(appName, microLocation) {
   function getMicroHistoryMethod(methodName) {
     return function(...rests) {
       var _a, _b, _c;
-      rests[2] = isUndefined(rests[2]) || isNull$1(rests[2]) || "" + rests[2] === "" ? microLocation.href : "" + rests[2];
+      rests[2] = isUndefined(rests[2]) || isNull(rests[2]) || "" + rests[2] === "" ? microLocation.href : "" + rests[2];
       const targetLocation = createURL(rests[2], microLocation.href);
       const targetFullPath = targetLocation.pathname + targetLocation.search + targetLocation.hash;
       if (!isRouterModePure(appName)) {
@@ -3047,9 +3006,9 @@ function createRouterApi() {
   function runGuards(appName, to, from, guards) {
     removeDomScope();
     for (const guard of guards) {
-      if (isFunction$1(guard)) {
+      if (isFunction(guard)) {
         guard(to, from, appName);
-      } else if (isPlainObject(guard) && isFunction$1(guard[appName])) {
+      } else if (isPlainObject(guard) && isFunction(guard[appName])) {
         guard[appName](to, from);
       }
     }
@@ -3376,7 +3335,7 @@ function removePathFromBrowser(appName) {
 }
 function createMicroFetch(url, target) {
   const rawFetch = !isUndefined(target) ? target : globalEnv.rawWindow.fetch;
-  if (!isFunction$1(rawFetch))
+  if (!isFunction(rawFetch))
     return rawFetch;
   return function microFetch(input, init, ...rests) {
     if (isString$1(input) || isURL(input)) {
@@ -3840,7 +3799,7 @@ class WithSandBox extends BaseSandbox {
         configurable: true,
         get: () => mount,
         set: (value) => {
-          if (this.active && isFunction$1(value) && !mount) {
+          if (this.active && isFunction(value) && !mount) {
             handleUmdHooks(mount = value, unmount);
           }
         }
@@ -3849,7 +3808,7 @@ class WithSandBox extends BaseSandbox {
         configurable: true,
         get: () => unmount,
         set: (value) => {
-          if (this.active && isFunction$1(value) && !unmount) {
+          if (this.active && isFunction(value) && !unmount) {
             handleUmdHooks(mount, unmount = value);
           }
         }
@@ -3986,7 +3945,7 @@ function patchWindowProperty$1(appName, microAppWindow) {
   Object.getOwnPropertyNames(microAppWindow).filter((key) => {
     escape2RawWindowRegExpKeys.some((reg) => {
       if (reg.test(key) && key in microAppWindow.parent) {
-        if (isFunction$1(rawWindow[key])) {
+        if (isFunction(rawWindow[key])) {
           microAppWindow[key] = bindFunctionToRawTarget(rawWindow[key], rawWindow);
         } else {
           const { configurable, enumerable } = Object.getOwnPropertyDescriptor(microAppWindow, key) || {
@@ -4029,7 +3988,7 @@ function patchWindowProperty$1(appName, microAppWindow) {
         configurable: true,
         get: () => rawWindow[eventName],
         set: (writable !== null && writable !== void 0 ? writable : !!set) ? (value) => {
-          rawWindow[eventName] = isFunction$1(value) ? value.bind(microAppWindow) : value;
+          rawWindow[eventName] = isFunction(value) ? value.bind(microAppWindow) : value;
         } : void 0
       });
     } catch (e) {
@@ -4338,7 +4297,7 @@ function patchDocumentEffect(appName, microAppWindow) {
     return SCOPE_DOCUMENT_EVENT.includes(type) ? bindTarget : rawDocument;
   }
   microRootDocument.prototype.addEventListener = function(type, listener, options) {
-    const handler = isFunction$1(listener) ? listener.__MICRO_APP_BOUND_FUNCTION__ = listener.__MICRO_APP_BOUND_FUNCTION__ || listener.bind(this) : listener;
+    const handler = isFunction(listener) ? listener.__MICRO_APP_BOUND_FUNCTION__ = listener.__MICRO_APP_BOUND_FUNCTION__ || listener.bind(this) : listener;
     const listenerList = eventListenerMap.get(type);
     if (listenerList) {
       listenerList.add(listener);
@@ -4362,10 +4321,10 @@ function patchDocumentEffect(appName, microAppWindow) {
   function createSetterHandler(eventName) {
     if (eventName === "onclick") {
       return (value) => {
-        if (isFunction$1(onClickHandler)) {
+        if (isFunction(onClickHandler)) {
           rawRemoveEventListener.call(rawDocument, "click", onClickHandler, false);
         }
-        if (isFunction$1(value)) {
+        if (isFunction(value)) {
           onClickHandler = value.bind(microDocument);
           rawAddEventListener.call(rawDocument, "click", onClickHandler, false);
         } else {
@@ -4374,7 +4333,7 @@ function patchDocumentEffect(appName, microAppWindow) {
       };
     }
     return (value) => {
-      rawDocument[eventName] = isFunction$1(value) ? value.bind(microDocument) : value;
+      rawDocument[eventName] = isFunction(value) ? value.bind(microDocument) : value;
     };
   }
   Object.getOwnPropertyNames(microRootDocument.prototype).filter((key) => /^on/.test(key) && !SCOPE_DOCUMENT_ON_EVENT.includes(key)).forEach((eventName) => {
@@ -4421,7 +4380,7 @@ function patchDocumentEffect(appName, microAppWindow) {
     reset();
   };
   const release = () => {
-    if (isFunction$1(onClickHandler)) {
+    if (isFunction(onClickHandler)) {
       rawRemoveEventListener.call(rawDocument, "click", onClickHandler);
     }
     onClickHandler = null;
@@ -4573,7 +4532,7 @@ function patchIframeNode(appName, microAppWindow, sandbox) {
       var _a;
       (_a = rawInnerHTMLDesc.set) === null || _a === void 0 ? void 0 : _a.call(this, code);
       Array.from(this.children).forEach((child) => {
-        if (isElement$1(child)) {
+        if (isElement(child)) {
           updateElementInfo(child, appName);
         }
       });
@@ -4926,7 +4885,7 @@ class IframeSandbox {
         configurable: true,
         get: () => mount,
         set: (value) => {
-          if (this.active && isFunction$1(value) && !mount) {
+          if (this.active && isFunction(value) && !mount) {
             handleUmdHooks(mount = value, unmount);
           }
         }
@@ -4935,7 +4894,7 @@ class IframeSandbox {
         configurable: true,
         get: () => unmount,
         set: (value) => {
-          if (this.active && isFunction$1(value) && !unmount) {
+          if (this.active && isFunction(value) && !unmount) {
             handleUmdHooks(mount, unmount = value);
           }
         }
@@ -5098,9 +5057,9 @@ class CreateApp {
           (_f = this.sandBox) === null || _f === void 0 ? void 0 : _f.actionsBeforeExecScripts(this.container, (mount, unmount) => {
             var _a2;
             if (!this.umdMode && !this.isUnmounted()) {
-              this.umdHookMount = isFunction$1(mount) ? mount : null;
-              this.umdHookUnmount = isFunction$1(unmount) ? unmount : null;
-              if (isFunction$1(this.umdHookMount) && isFunction$1(this.umdHookUnmount)) {
+              this.umdHookMount = isFunction(mount) ? mount : null;
+              this.umdHookUnmount = isFunction(unmount) ? unmount : null;
+              if (isFunction(this.umdHookMount) && isFunction(this.umdHookUnmount)) {
                 (_a2 = this.sandBox) === null || _a2 === void 0 ? void 0 : _a2.markUmdMode(this.umdMode = true);
                 try {
                   if (this.getAppState() === appStates.MOUNTED) {
@@ -5139,7 +5098,7 @@ class CreateApp {
     var _a, _b;
     const dispatchAction = () => {
       const nextAction = () => this.actionsAfterMounted();
-      if (isPromise$1(umdHookMountResult)) {
+      if (isPromise(umdHookMountResult)) {
         umdHookMountResult.then(nextAction).catch((e) => {
           logError("An error occurred in window.mount \n", this.name, e);
           nextAction();
@@ -5214,7 +5173,7 @@ class CreateApp {
       keepRouteState,
       unmountcb
     });
-    if (isPromise$1(umdHookUnmountResult)) {
+    if (isPromise(umdHookUnmountResult)) {
       removeDomScope();
       umdHookUnmountResult.then(nextAction).catch((e) => {
         logError("An error occurred in window.unmount \n", this.name, e);
@@ -5385,7 +5344,7 @@ class CreateApp {
   getMicroAppGlobalHook(eventName) {
     var _a, _b;
     const listener = (_b = (_a = this.sandBox) === null || _a === void 0 ? void 0 : _a.proxyWindow) === null || _b === void 0 ? void 0 : _b[eventName];
-    return isFunction$1(listener) ? listener : null;
+    return isFunction(listener) ? listener : null;
   }
   querySelector(selectors) {
     return this.container ? globalEnv.rawElementQuerySelector.call(this.container, selectors) : null;
@@ -5429,7 +5388,7 @@ function handleNewNode(child, app) {
       const linkReplaceComment = document.createComment("link element with exclude attribute ignored by micro-app");
       dynamicElementInMicroAppMap.set(child, linkReplaceComment);
       return linkReplaceComment;
-    } else if (child.hasAttribute("ignore") || checkIgnoreUrl(child.getAttribute("href"), app.name) || child.href && isFunction$1(microApp.options.excludeAssetFilter) && microApp.options.excludeAssetFilter(child.href)) {
+    } else if (child.hasAttribute("ignore") || checkIgnoreUrl(child.getAttribute("href"), app.name) || child.href && isFunction(microApp.options.excludeAssetFilter) && microApp.options.excludeAssetFilter(child.href)) {
       return child;
     }
     const { address, linkInfo, replaceComment } = extractLinkFromHtml(child, null, app, true);
@@ -5443,7 +5402,7 @@ function handleNewNode(child, app) {
     }
     return child;
   } else if (isScriptElement(child)) {
-    if (child.src && isFunction$1(microApp.options.excludeAssetFilter) && microApp.options.excludeAssetFilter(child.src)) {
+    if (child.src && isFunction(microApp.options.excludeAssetFilter) && microApp.options.excludeAssetFilter(child.src)) {
       return child;
     }
     const { replaceComment, address, scriptInfo } = extractScriptElement(child, null, app, true) || {};
@@ -5542,7 +5501,7 @@ function isPendMethod(method) {
   return method === globalEnv.rawAppend || method === globalEnv.rawPrepend || method === globalEnv.rawFragmentAppend || method === globalEnv.rawFragmentPrepend;
 }
 function completePathDynamic(app, newChild) {
-  if (isElement$1(newChild)) {
+  if (isElement(newChild)) {
     if (/^(img|script)$/i.test(newChild.tagName)) {
       if (newChild.hasAttribute("src")) {
         globalEnv.rawSetAttribute.call(newChild, "src", CompletionPath(newChild.getAttribute("src"), app.url));
@@ -5618,11 +5577,11 @@ function patchElementAndDocument() {
   };
   rawRootElement.prototype.insertAdjacentElement = function(where, element) {
     var _a;
-    if ((element === null || element === void 0 ? void 0 : element.__MICRO_APP_NAME__) && isElement$1(element)) {
+    if ((element === null || element === void 0 ? void 0 : element.__MICRO_APP_NAME__) && isElement(element)) {
       const app = appInstanceMap.get(element.__MICRO_APP_NAME__);
       if (app === null || app === void 0 ? void 0 : app.container) {
         const processedEle = handleNewNode(element, app);
-        if (!isElement$1(processedEle))
+        if (!isElement(processedEle))
           return element;
         const realParent = (_a = getHijackParent(this, processedEle, app)) !== null && _a !== void 0 ? _a : this;
         return globalEnv.rawInsertAdjacentElement.call(realParent, where, processedEle);
@@ -5663,7 +5622,7 @@ function patchElementAndDocument() {
     var _a;
     const _this = (_a = getElementQueryTarget(this)) !== null && _a !== void 0 ? _a : this;
     const result = globalEnv.rawElementQuerySelector.call(_this, selectors);
-    return getElementQueryResult(isNull$1(result) && _this !== this, _this, result, selectors, "querySelector");
+    return getElementQueryResult(isNull(result) && _this !== this, _this, result, selectors, "querySelector");
   };
   rawRootElement.prototype.querySelectorAll = function querySelectorAll(selectors) {
     var _a;
@@ -5708,7 +5667,7 @@ function patchElementAndDocument() {
       globalEnv.rawInnerHTMLDesc.set.call(this, code);
       const currentAppName2 = this.__MICRO_APP_NAME__ || getCurrentAppName();
       Array.from(this.children).forEach((child) => {
-        if (isElement$1(child) && currentAppName2) {
+        if (isElement(child) && currentAppName2) {
           updateElementInfo(child, currentAppName2);
         }
       });
@@ -6104,7 +6063,7 @@ function defineElement(tagName) {
     handleConnected() {
       if (!this.appName || !this.appUrl)
         return;
-      if (this.getDisposeResult("shadowDOM") && !this.shadowRoot && isFunction$1(this.attachShadow)) {
+      if (this.getDisposeResult("shadowDOM") && !this.shadowRoot && isFunction(this.attachShadow)) {
         this.attachShadow({ mode: "open" });
       }
       this.updateSsrUrl(this.appUrl);
@@ -6376,7 +6335,7 @@ function defineElement(tagName) {
     getRouterEventDelay() {
       let delay = parseInt(this.getAttribute("router-event-delay"));
       if (isNaN(delay)) {
-        delay = parseInt(isFunction$1(microApp.options["router-event-delay"]) ? microApp.options["router-event-delay"](this.appName) : microApp.options["router-event-delay"]);
+        delay = parseInt(isFunction(microApp.options["router-event-delay"]) ? microApp.options["router-event-delay"](this.appName) : microApp.options["router-event-delay"]);
       }
       return !isNaN(delay) ? delay : 0;
     }
@@ -6421,14 +6380,14 @@ function preFetch(apps, delay) {
     return logError("preFetch is only supported in browser environment");
   }
   requestIdleCallback(() => {
-    const delayTime = isNumber$1(delay) ? delay : microApp.options.prefetchDelay;
+    const delayTime = isNumber(delay) ? delay : microApp.options.prefetchDelay;
     setTimeout(() => {
       preFetchInSerial(apps);
-    }, isNumber$1(delayTime) ? delayTime : 3e3);
+    }, isNumber(delayTime) ? delayTime : 3e3);
   });
 }
 function preFetchInSerial(apps) {
-  isFunction$1(apps) && (apps = apps());
+  isFunction(apps) && (apps = apps());
   if (isArray$1(apps)) {
     apps.reduce((pre, next) => pre.then(() => preFetchAction(next)), Promise.resolve());
   }
@@ -6637,20 +6596,20 @@ function renderApp(options) {
   return new Promise((resolve) => {
     if (!isPlainObject(options))
       return logError("renderApp options must be an object");
-    const container = isElement$1(options.container) ? options.container : isString$1(options.container) ? document.querySelector(options.container) : null;
-    if (!isElement$1(container))
+    const container = isElement(options.container) ? options.container : isString$1(options.container) ? document.querySelector(options.container) : null;
+    if (!isElement(container))
       return logError("Target container is not a DOM element.");
     const microAppElement = pureCreateElement(microApp.tagName);
     for (const attr in options) {
       if (attr === "onDataChange") {
-        if (isFunction$1(options[attr])) {
+        if (isFunction(options[attr])) {
           microAppElement.addEventListener("datachange", options[attr]);
         }
       } else if (attr === "lifeCycles") {
         const lifeCycleConfig = options[attr];
         if (isPlainObject(lifeCycleConfig)) {
           for (const lifeName in lifeCycleConfig) {
-            if (lifeName.toUpperCase() in lifeCycles && isFunction$1(lifeCycleConfig[lifeName])) {
+            if (lifeName.toUpperCase() in lifeCycles && isFunction(lifeCycleConfig[lifeName])) {
               microAppElement.addEventListener(lifeName.toLowerCase(), lifeCycleConfig[lifeName]);
             }
           }
@@ -6734,6 +6693,48 @@ class MicroApp extends EventCenterForBaseApp {
   }
 }
 const microApp = new MicroApp();
+const _microAppSetting = class _microAppSetting {
+  // 私有构造函数，确保外部不能直接通过new创建实例  
+  constructor() {
+    this.setting = {
+      projectName: "",
+      // 项目名称
+      subAppConfigs: {},
+      // 子应用配置
+      isBaseApp: true,
+      // 是否为 micro-app 主应用（env.VITE_BASE_MICRO_APP）
+      basePath: ""
+      // 打包路径（env.VITE_BASE_PATH）
+    };
+  }
+  // 获取单例实例  
+  static getInstance() {
+    if (!_microAppSetting.instance || _microAppSetting.instance == null) {
+      _microAppSetting.instance = new _microAppSetting();
+    }
+    return _microAppSetting.instance;
+  }
+  // 设置单个全局配置 
+  setConfig(key, value) {
+    this.setting[key] = value;
+  }
+  // 一次性设置全局配置  
+  setAllConfig(initValue) {
+    for (const key in initValue) {
+      if (key in this.setting) {
+        this.setting[key] = initValue[key];
+      }
+    }
+    console.log("✅全局配置microAppSetting成功", this.setting);
+  }
+  // 获取全局配置  
+  getConfig(key) {
+    return this.setting[key];
+  }
+};
+_microAppSetting.instance = null;
+let microAppSetting = _microAppSetting;
+const microAppSetting$1 = microAppSetting.getInstance();
 function getSubAppConfigs() {
   return microAppSetting$1.getConfig("subAppConfigs");
 }
@@ -6763,11 +6764,11 @@ function getMainAppConfigs() {
   };
 }
 function IsMicroApp() {
-  const isBaseApp2 = microAppSetting$1.getConfig("isBaseApp").toString() === "true";
+  const isBaseApp2 = microAppSetting$1.getConfig("isBaseApp");
   return isBaseApp2 ? true : window.__MICRO_APP_ENVIRONMENT__ || false;
 }
 function IsBaseApp() {
-  return microAppSetting$1.getConfig("isBaseApp").toString() === "true";
+  return microAppSetting$1.getConfig("isBaseApp");
 }
 function MicroAppName(name) {
   const isMicroApp2 = IsMicroApp();
@@ -6793,10 +6794,10 @@ function getMicroApp$1() {
   return isBaseApp2 ? microApp : window && window.microApp ? window.microApp : microApp;
 }
 const microAppUtils = {
-  isMicroApp: IsMicroApp(),
-  isBaseApp: IsBaseApp(),
-  microAppBaseRoute: MicroAppBaseRoute(),
-  microAppPublicPath: MicroAppPublicPath(),
+  isMicroApp: IsMicroApp,
+  isBaseApp: IsBaseApp,
+  getMicroAppBaseRoute: MicroAppBaseRoute,
+  getMicroAppPublicPath: MicroAppPublicPath,
   getMicroAppName: MicroAppName,
   getMicroApp: getMicroApp$1
 };
@@ -6820,7 +6821,7 @@ function initVueRouter(router2) {
 }
 function getRounterInstance() {
   var _a, _b, _c;
-  if (isMicroApp && isBaseApp$1) {
+  if (isMicroApp() && isBaseApp$1()) {
     return microApp.router;
   } else {
     if ((_a = window == null ? void 0 : window.microApp) == null ? void 0 : _a.router.getBaseAppRouter) {
@@ -6837,12 +6838,6 @@ const toString = Object.prototype.toString;
 function is(val, type) {
   return toString.call(val) === `[object ${type}]`;
 }
-function isDef(val) {
-  return typeof val !== "undefined";
-}
-function isUnDef(val) {
-  return !isDef(val);
-}
 function isObject(val) {
   return val !== null && is(val, "Object");
 }
@@ -6858,53 +6853,11 @@ function isEmpty(val) {
   }
   return false;
 }
-function isDate(val) {
-  return is(val, "Date");
-}
-function isNull(val) {
-  return val === null;
-}
-function isNullAndUnDef(val) {
-  return isUnDef(val) && isNull(val);
-}
-function isNullOrUnDef(val) {
-  return isUnDef(val) || isNull(val);
-}
-function isNumber(val) {
-  return is(val, "Number");
-}
-function isPromise(val) {
-  return is(val, "Promise") && isObject(val) && isFunction(val.then) && isFunction(val.catch);
-}
 function isString(val) {
   return is(val, "String");
 }
-function isFunction(val) {
-  return typeof val === "function";
-}
-function isBoolean(val) {
-  return is(val, "Boolean");
-}
-function isRegExp(val) {
-  return is(val, "RegExp");
-}
 function isArray(val) {
   return val && Array.isArray(val);
-}
-function isWindow(val) {
-  return typeof window !== "undefined" && is(val, "Window");
-}
-function isElement(val) {
-  return isObject(val) && !!val.tagName;
-}
-function isMap(val) {
-  return is(val, "Map");
-}
-const isServer = typeof window === "undefined";
-const isClient = !isServer;
-function isUrl(path) {
-  const reg = /^(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+(?::\d+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?(\/#\/)?(?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/;
-  return reg.test(path);
 }
 function renderAllSubApp() {
   const subAppConfigs = getSubAppConfigs();
@@ -7024,17 +6977,20 @@ class MicroAppMessage {
 }
 const microAppMessage = new MicroAppMessage(
   getMicroApp(),
-  isBaseApp,
+  isBaseApp(),
   getMainAppConfigs()["disable-sandbox"] || false
 );
 async function initMyMicroApp(app, options, router2, store) {
-  microAppSetting$1.setAllConfig(options);
-  if (options.isBaseApp) {
-    console.log(`🍒 ${options.projectName}为主应用, 注册主应用`);
+  await microAppSetting$1.setAllConfig(options);
+  const microAppUtils2 = await Promise.resolve().then(() => utils);
+  const { getMicroApp: getMicroApp2, isBaseApp: isBaseApp2, isMicroApp: isMicroApp2 } = microAppUtils2.default;
+  console.log(`💥microAppUtils已可用:`, microAppUtils2.default);
+  if (isBaseApp2()) {
+    console.log(`🍒 ${options.projectName}为主应用, 注册主应用📌`);
     microApp.router.setBaseAppRouter(router2);
     microApp.start(getMainAppConfigs());
   } else {
-    console.log(`🍍 ${options.projectName}为子应用, 注册子应用`);
+    console.log(`🍍 ${options.projectName}为子应用, 注册子应用📌`);
     if (window) {
       window.unmount = () => {
         app.unmount();
@@ -7042,51 +6998,20 @@ async function initMyMicroApp(app, options, router2, store) {
       };
     }
   }
-  const microAppUtils2 = await Promise.resolve().then(() => utils);
-  const { getMicroApp: getMicroApp2, isBaseApp: isBaseApp2, isMicroApp: isMicroApp2 } = microAppUtils2.default;
   initVueRouter(router2);
   const microAppInst = getMicroApp2();
   console.log("===🎉🎉 microApp初始化完成 🎉🎉==", microAppInst);
-  console.log("🚩当前：", isMicroApp2 ? "在微前端环境" : "不在微前端环境", isBaseApp2 ? "主应用" : "子应用");
+  console.log(`🚩${options.projectName}当前：`, isMicroApp2() ? "在微前端环境" : "不在微前端环境", isBaseApp2() ? "主应用" : "子应用");
   return microAppInst;
 }
 export {
-  IsBaseApp,
-  IsMicroApp,
-  MicroAppBaseRoute,
-  MicroAppName,
-  MicroAppPublicPath,
   initMyMicroApp as default,
   getMainAppConfigs,
-  getMicroApp$1 as getMicroApp,
   getRounterInstance,
   getSubAppConfigs,
   initVueRouter,
-  is,
-  isArray,
-  isBoolean,
-  isClient,
-  isDate,
-  isDef,
-  isElement,
-  isEmpty,
-  isFunction,
-  isMap,
-  isNull,
-  isNullAndUnDef,
-  isNullOrUnDef,
-  isNumber,
-  isObject,
-  isPromise,
-  isRegExp,
-  isServer,
-  isString,
-  isUnDef,
-  isUrl,
-  isWindow,
   microAppMessage,
   microAppSetting$1 as microAppSetting,
-  microAppSetting$1 as microAppSettingInstance,
   microAppUtils,
   renderAllSubApp
 };
