@@ -400,3 +400,111 @@ watchEffect(async () => {
   isMicroAppView.value = !isNullOrUnDef(microAppOptions.value) && !isEmpty(microAppOptions.value)
 })
 ```
+
+## 通信功能
+
+​	完成了基础功能之后，我们还需要确保应用之间能够相互通信，由于主应用和子应用的通信 API 有一点差别，用的时候容易混淆，不够简便，所以我们对其进行了二次封装，提供了统一的通信 API。
+
+对于具体的使用方法，我们通过几个简单的例子来说明：
+
+> 准备工作
+>
+> 首先，要引入我们的 getMicroAppMessage() 方法，获取一个通信对象
+>
+> ```ini
+> import { getMicroAppMessage } from "v-micro-app-plugin";
+> 
+> const microAppMessage = getMicroAppMessage();
+> ```
+
+- 发出全局信息：`用法一致`
+
+```kotlin
+microAppMessage.sendGlobal({
+    data: { fun: "sendGlobal", text: "给全局发送数据~sendGlobal" },
+    callback: () => {
+        console.log("使用sendGlobal发送数据成功，执行回调！");
+    },
+});
+```
+
+- 子应用给主应用发出信息：`无需 appName 参数`
+
+```php
+microAppMessage.sendMessage({
+    data: { app: "appSecond", value: "子应用给主应用发送数据~sendMessage" },
+    callback: () => {
+        console.log("子应用使用sendMessage发送数据成功，执行回调！");
+    },
+});
+```
+
+- 主应用给子应用发出信息：`需要 appName 参数`
+
+```php
+microAppMessage.sendMessage({
+    data: { app: "mainApp", value: "主应用给appFirst发送数据~sendMessage" },
+    appName: "appFirst",
+    callback: () => {
+        console.log("主应用使用sendMessage发送数据成功，执行回调！");
+    },
+});
+```
+
+- 接收全局信息： `用法一致`
+
+```javascript
+setTimeout(() => {
+    console.log("接收到的全局信息getGlobalMessage：", microAppMessage.getGlobalMessage());
+}, 1000);
+```
+
+- 子应用接收主应用发来的信息：`无需 appName 参数`
+
+```javascript
+setTimeout(() => {
+    console.log(
+        "子应用接收到主应用发来的非全局信息getMessage：",
+        microAppMessage.getMessage()
+    );
+}, 1000);
+```
+
+- 主应用接收子应用发来的信息：`需要 appName 参数`
+
+```javascript
+setTimeout(() => {
+    console.log(
+        "主应用收到appFirst发来的信息getMessage：", microAppMessage.getMessage('appFirst'),
+        "主应用收到appSecond发来的信息getMessage：", microAppMessage.getMessage('appSecond')
+    );
+}, 1000);
+```
+
+- 控制台信息：
+
+![image-20240815102734720.png](./images/a9eb7fa6e9ea42ba96e6f1f81d17c91btplv-73owjymdk6-jj-mark-v100005o6Y6YeR5oqA5pyv56S-5Yy6IEAg5bCP55m95o6i57Si5LiW55WM5qyn6IC2q75.webp)
+
+![image-20240815101949378.png](./images/1d79a1c726934f649b173c5906c0b6ectplv-73owjymdk6-jj-mark-v100005o6Y6YeR5oqA5pyv56S-5Yy6IEAg5bCP55m95o6i57Si5LiW55WM5qyn6IC2q75.webp)
+
+## 示例
+
+ 微前端插件 v-micro-app-plugin 源码地址：[https://github.com/yoguoer/v-micro-app-plugin.git](https://github.com/yoguoer/v-micro-app-plugin.git)
+
+用该插件搭建的的示例项目 vMicroVerseHub 源码地址：[https://github.com/yoguoer/vMicroVerseHub.git](https://github.com/yoguoer/vMicroVerseHub.git)
+
+> 具体使用方法和效果可以查看仓库中的 readme 文档，或者运行 vMicroVerseHub 进行更直观的体验，项目中含有各项功能的测试 Demo 以及关键节点的 console.log，更好地呈现效果。
+
+效果如下：
+
+- 主应用视图：
+
+![main -original-original](./images/main%20-original-original.gif)
+
+- sub-app-first视图： 
+
+![first -original-original](./images/first%20-original-original.gif)
+
+- sub-app-second视图： 
+
+![seond -original-original](./images/seond%20-original-original.gif)
