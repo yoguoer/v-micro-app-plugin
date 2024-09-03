@@ -6,4 +6,5 @@ export interface microAppConfig {
     basePath?: string; // 打包路径
     disableSandbox?: boolean; // 是否禁用沙箱
     iframe?: boolean; // 是否使用 iframe
+    [key: string]: any;
 }

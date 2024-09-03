@@ -17,7 +17,10 @@ export async function initMicroApp(app: object, options: microAppConfig, router?
     // docs:https://micro-zoe.github.io/micro-app/docs.html#/zh-cn/router?id=%e5%ad%90%e5%ba%94%e7%94%a8%e6%8e%a7%e5%88%b6%e4%b8%bb%e5%ba%94%e7%94%a8%e8%b7%b3%e8%bd%ac
     microApp.router.setBaseAppRouter(router)
 
-    microApp.start(MainAppConfigs)
+    microApp.start({
+      ...options,
+      MainAppConfigs
+    })
   } else {
     // 为子应用时, 注册子应用相关方法
     if (window) {
