@@ -36,7 +36,8 @@ yarn add v-micro-app-plugin
 
 # 参数
 
-## initMyMicroApp 调用参数
+## initMyMicroApp 
+调用参数：
 
 | 参数名  | 介绍         | 类型           |
 | ------- | ------------ | -------------- |
@@ -44,6 +45,9 @@ yarn add v-micro-app-plugin
 | options | 配置参数     | microAppConfig |
 | router  | Router 实例  | any            |
 | store   | 状态管理实例 | any            |
+
+返回值：microApp 实例
+
 
 注意：`microAppConfig`的类型声明如下：
 
