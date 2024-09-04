@@ -1,6 +1,6 @@
 import type { microAppConfig } from "./src/types/config.d.ts"
 import microAppSetting from './src/settings/microAppSetting.ts'
-import { initVueRouter } from './src/router.ts'
+import { initVueRouter, getRounterInstance } from './src/router.ts'
 
 let microAppMessageInstance;
 
@@ -40,10 +40,11 @@ export function getMicroAppMessage() {
   return microAppMessageInstance;
 }
 
+export const microAppRouter = getRounterInstance()
+
 // 导出其他模块
 export { default as microAppUtils } from './src/utils.ts' // 多种方法
 export { default as renderAllSubApp } from './src/render.ts' // renderAllSubApp()方法
-export * from './src/router.ts' // getRounterInstance()方法
 export { getMainAppConfigs, getSubAppConfigs } from './src/appConfigs.ts' // subAppConfigs 和 mainAppConfigs
 export { microAppSetting }
 

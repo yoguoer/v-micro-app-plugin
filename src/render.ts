@@ -12,7 +12,7 @@ export default function renderAllSubApp() {
     return Error('❗未配置子应用。')
   }
   console.log("🎁subAppConfigs📢：", subAppConfigs)
-  for (let appName in subAppConfigs) {
+  for (let appName in (subAppConfigs as any)) {
     microApp.renderApp(subAppConfigs[appName]).then((result) => {
       if (result) {
         console.log(`💯子应用【${appName}】渲染成功！`)
