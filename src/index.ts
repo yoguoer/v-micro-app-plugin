@@ -19,7 +19,7 @@ export async function initMicroApp(app: object, options: microAppConfig, router?
 
     microApp.start({
       ...options,
-      MainAppConfigs
+      ...MainAppConfigs
     })
   } else {
     // 为子应用时, 注册子应用相关方法
