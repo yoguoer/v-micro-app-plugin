@@ -47,4 +47,4 @@ export { default as microAppUtils } from './src/utils.ts' // 多种方法
 export { default as renderAllSubApp } from './src/render.ts' // renderAllSubApp()方法
 export { getMainAppConfigs, getSubAppConfigs } from './src/appConfigs.ts' // subAppConfigs 和 mainAppConfigs
 export { microAppSetting }
-
+export * from './src/router.ts' // getRounterInstance()方法
