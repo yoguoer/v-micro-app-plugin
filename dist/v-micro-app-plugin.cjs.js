@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperties(exports, { __esModule: { value: true }, [Symbol.toStringTag]: { value: "Module" } });
+const index = require("./index-Cva94LE9.js");
+exports.default = index.initMyMicroApp;
+exports.getMainAppConfigs = index.getMainAppConfigs;
+exports.getMicroAppMessage = index.getMicroAppMessage;
+exports.getRounterInstance = index.router;
+exports.getSubAppConfigs = index.getSubAppConfigs;
+exports.microAppRouter = index.microAppRouter;
+exports.microAppSetting = index.microAppSetting;
+exports.microAppUtils = index.microAppUtils;
+exports.renderAllSubApp = index.renderAllSubApp;
