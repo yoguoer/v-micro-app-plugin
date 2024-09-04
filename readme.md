@@ -12,6 +12,22 @@
 
 **易于扩展**：插件架构清晰，易于根据业务需求进行定制和扩展。
 
+# 为什么要封装 v-micro-app-plugin？
+  京东 micro-app 框架本身已经非常完善，但在使用方面，其对主应用和子应用的适配以及 API 有些差异，导致在开发过程中需要做很多重复性的工作。比如：
+  * 发送消息 API:
+    * 主应用：`microApp.setData(appName, data, callback)`
+    * 子应用：`window.microApp.dispatch(data, callback)`
+  * 应用初始化：
+    * 主应用需要调用： `microApp.start();`
+    * 子应用需要注册相关方法：
+      ``` javascript
+      window.unmount = () => {
+                app.unmount()
+                router = null
+                store = null
+            }
+      ```
+ 为了屏蔽主应用和子应用的 API 差异，向上层使用者提供统一的 API，我们封装了 `v-micro-app-plugin` 插件。
 # 安装
 
 ​	你可以通过 npm、pnpm 或 yarn 来安装 `v-micro-app-plugin`。
