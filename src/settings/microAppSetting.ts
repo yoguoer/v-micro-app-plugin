@@ -9,12 +9,13 @@ class microAppSetting {
     // 定义私有变量，用于存储配置信息
     private setting: microAppConfig = {
         projectName: '', // 项目名称
-        subAppConfigs: {}, // 子应用配置
         isBaseApp: true, // 是否为 micro-app 主应用
         basePath: '', // 打包路径
-        disableSandbox: false, // 是否禁用沙箱
+        'disable-sandbox': false, // 是否禁用沙箱
         iframe: true, // 是否使用 iframe
     }
+    // 子应用配置，用于存储配置信息
+    private subAppConfigs: microAppConfig = {}
 
     // 私有构造函数，确保外部不能直接通过new创建实例  
     private constructor() { }
@@ -39,8 +40,9 @@ class microAppSetting {
     public setAllConfig(initValue: microAppConfig): void {
         // 遍历传入的配置对象
         for (const key in initValue) {
-            // 使用 TypeScript 的类型守卫确保 key 在 this.setting 中存在  
-            if (key in this.setting) {
+            if(key === 'subAppConfigs') {
+                this.subAppConfigs[key] = initValue[key]
+            }else {
                 this.setting[key] = initValue[key];
             }
         }
@@ -48,9 +50,27 @@ class microAppSetting {
     }
 
     // 获取全局配置  
-    public getConfig(key: keyof microAppConfig): any {
+    public getConfig(key: keyof microAppConfig): keyof microAppConfig {
         // 返回对应的配置项
         return this.setting[key];
+    }
+
+    // 获取全局配置  
+    public getMainAppConfigs(): microAppConfig {
+        // 返回对应的配置项
+        return this.setting;
+    }
+
+    // 获取子应用配置
+    public getSubAppConfigs(appName: string): keyof microAppConfig {
+        // 返回对应的配置项
+        return this.subAppConfigs[appName];
+    }
+
+    // 获取子应用配置
+    public getAllSubAppConfigs(): microAppConfig {
+        // 返回对应的配置项
+        return this.subAppConfigs;
     }
 }
 
