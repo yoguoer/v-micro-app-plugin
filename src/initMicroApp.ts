@@ -13,10 +13,7 @@ export async function initMicroApp(isBaseApp: boolean, app: object, options: mic
         const { getMainAppConfigs } = await import('./appConfigs.ts')
         const MainAppConfigs = await getMainAppConfigs()
         // 等待导入appConfigs.ts并启动microApp  
-        microApp.start({
-            ...options,
-            ...MainAppConfigs
-          }) // micro-app注册函数，全局执行一次
+        microApp.start(MainAppConfigs) // micro-app注册函数，全局执行一次
     } else {
         console.log(`📌${options.projectName}为子应用, 注册子应用!`)
 

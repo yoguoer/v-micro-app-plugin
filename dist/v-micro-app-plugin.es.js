@@ -1,12 +1,12 @@
-import { i, d, b, h, e, f, c, a, r } from "./index-SBhHXQui.mjs";
+import { i, e, b, h, f, c, d, a, r } from "./index-D15vt_Hl.mjs";
 export {
   i as default,
-  d as getMainAppConfigs,
+  e as getMainAppConfigs,
   b as getMicroAppMessage,
   h as getRounterInstance,
-  e as getSubAppConfigs,
-  f as initVueRouter,
-  c as microAppSetting,
+  f as getSubAppConfigs,
+  c as microAppRouter,
+  d as microAppSetting,
   a as microAppUtils,
   r as renderAllSubApp
 };

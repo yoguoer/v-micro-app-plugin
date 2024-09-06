@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const index = require("./index-DaOQJQGa.js");
+const index = require("./index-Cva94LE9.js");
 const { getMicroAppName } = index.microAppUtils;
 class MicroAppMessage {
   constructor(app, isBaseApp, disableSandbox) {

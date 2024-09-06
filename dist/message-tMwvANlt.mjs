@@ -1,4 +1,4 @@
-import { g as getAllApps, E as EventCenterForMicroApp, a as microAppUtils } from "./index-SBhHXQui.mjs";
+import { g as getAllApps, E as EventCenterForMicroApp, a as microAppUtils } from "./index-D15vt_Hl.mjs";
 const { getMicroAppName } = microAppUtils;
 class MicroAppMessage {
   constructor(app, isBaseApp, disableSandbox) {

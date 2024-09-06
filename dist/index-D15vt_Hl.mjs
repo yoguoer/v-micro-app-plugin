@@ -1,4 +1,3 @@
-"use strict";
 const _microAppSetting = class _microAppSetting {
   // 私有构造函数，确保外部不能直接通过new创建实例  
   constructor() {
@@ -1580,8 +1579,8 @@ function runDynamicInlineScript(address, app, scriptInfo) {
   runScript(address, app, scriptInfo, void 0, replaceElement);
   return replaceElement;
 }
-function runCode2InlineScript(address, code, module2, scriptElement, attrs, callback) {
-  if (module2) {
+function runCode2InlineScript(address, code, module, scriptElement, attrs, callback) {
+  if (module) {
     globalEnv.rawSetAttribute.call(scriptElement, "type", "module");
     if (isInlineScript(address)) {
       scriptElement.textContent = code;
@@ -3159,7 +3158,7 @@ function createRouterApi() {
     clearRouterWhenUnmount: clearRouterWhenUnmount2
   };
 }
-const { router, executeNavigationGuard, clearRouterWhenUnmount } = createRouterApi();
+const { router: router$1, executeNavigationGuard, clearRouterWhenUnmount } = createRouterApi();
 const locationKeys = ["href", "pathname", "search", "hash", "host", "hostname", "port", "protocol", "search"];
 const guardLocationKeys = [...locationKeys, "origin", "fullPath"];
 function createMicroLocation(appName, url, microAppWindow, childStaticLocation, browserHost, childHost) {
@@ -3553,7 +3552,7 @@ class WithSandBox extends BaseSandbox {
       removeDomScope,
       pureCreateElement,
       location: microAppWindow.location,
-      router
+      router: router$1
     });
   }
   /**
@@ -4747,7 +4746,7 @@ class IframeSandbox {
       removeDomScope,
       pureCreateElement,
       location: this.proxyLocation,
-      router
+      router: router$1
     });
   }
   /**
@@ -5074,7 +5073,7 @@ class CreateApp {
         (_b = this.preRenderEvents) === null || _b === void 0 ? void 0 : _b.forEach((cb) => cb());
         this.isPrerender = false;
         this.preRenderEvents = null;
-        router.attachToURL(this.name);
+        router$1.attachToURL(this.name);
         (_c = this.sandBox) === null || _c === void 0 ? void 0 : _c.setPreRenderState(false);
       } else {
         this.container = container;
@@ -6339,7 +6338,7 @@ function defineElement(tagName) {
      * get config of default page
      */
     getDefaultPage() {
-      return router.getDefaultPage(this.appName) || this.getAttribute("default-page") || this.getAttribute("defaultPage") || "";
+      return router$1.getDefaultPage(this.appName) || this.getAttribute("default-page") || this.getAttribute("defaultPage") || "";
     }
     /**
      * get config of router-mode
@@ -6688,7 +6687,7 @@ class MicroApp extends EventCenterForBaseApp {
     this.tagName = "micro-app";
     this.hasInit = false;
     this.options = {};
-    this.router = router;
+    this.router = router$1;
     this.preFetch = preFetch;
     this.unmountApp = unmountApp;
     this.unmountAllApps = unmountAllApps;
@@ -6740,30 +6739,6 @@ class MicroApp extends EventCenterForBaseApp {
   }
 }
 const microApp = new MicroApp();
-let VueRouter = null;
-function initVueRouter(router2) {
-  if (!VueRouter) {
-    VueRouter = router2;
-  }
-  return VueRouter;
-}
-async function getRounterInstance() {
-  var _a, _b, _c;
-  const microAppUtils2 = await Promise.resolve().then(() => utils);
-  const { isMicroApp, isBaseApp } = microAppUtils2.default;
-  if (isMicroApp() && isBaseApp()) {
-    return microApp.router;
-  } else {
-    if ((_a = window == null ? void 0 : window.microApp) == null ? void 0 : _a.router.getBaseAppRouter) {
-      return (_b = window == null ? void 0 : window.microApp) == null ? void 0 : _b.router.getBaseAppRouter();
-    } else if ((_c = window == null ? void 0 : window.microApp) == null ? void 0 : _c.router) {
-      return window.microApp.router;
-    } else {
-      return VueRouter;
-    }
-  }
-}
-getRounterInstance();
 function IsMicroApp() {
   const isBaseApp = microAppSetting$1.getConfig("isBaseApp");
   return isBaseApp ? true : window.__MICRO_APP_ENVIRONMENT__ || false;
@@ -6812,6 +6787,29 @@ const utils = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePropert
   default: microAppUtils,
   getMicroApp
 }, Symbol.toStringTag, { value: "Module" }));
+let VueRouter = null;
+function initVueRouter(router2) {
+  if (!VueRouter) {
+    VueRouter = router2;
+  }
+  return VueRouter;
+}
+function getRounterInstance() {
+  var _a, _b, _c;
+  const { isMicroApp, isBaseApp } = microAppUtils;
+  if (isMicroApp() && isBaseApp()) {
+    return microApp.router;
+  } else {
+    if ((_a = window == null ? void 0 : window.microApp) == null ? void 0 : _a.router.getBaseAppRouter) {
+      return (_b = window == null ? void 0 : window.microApp) == null ? void 0 : _b.router.getBaseAppRouter();
+    } else if ((_c = window == null ? void 0 : window.microApp) == null ? void 0 : _c.router) {
+      return window.microApp.router;
+    } else {
+      return VueRouter;
+    }
+  }
+}
+const router = getRounterInstance();
 const toString = Object.prototype.toString;
 function is(val, type) {
   return toString.call(val) === `[object ${type}]`;
@@ -6894,13 +6892,13 @@ async function initMyMicroApp(app, options, router2, store) {
   const microAppUtils2 = await Promise.resolve().then(() => utils);
   console.log(`💥microAppUtils已可用:`, microAppUtils2.default);
   const { getMicroApp: getMicroApp2, isBaseApp, isMicroApp, getMicroAppName } = microAppUtils2.default;
-  const { initMicroApp } = await Promise.resolve().then(() => require("./initMicroApp-D8Q5K6zZ.js"));
+  const { initMicroApp } = await import("./initMicroApp-CQpTxq79.mjs");
   initMicroApp(isBaseApp(), app, options, router2, store);
   initVueRouter(router2);
   const microAppInst = getMicroApp2();
   console.log("===🎉🎉 microApp初始化完成 🎉🎉==", microAppInst);
   console.log(`🚩${options.projectName}当前：`, isMicroApp() ? "在微前端环境" : "不在微前端环境", isBaseApp() ? "主应用" : "子应用");
-  const { initMicroAppMessage } = await Promise.resolve().then(() => require("./index-Bfnzdw8y.js"));
+  const { initMicroAppMessage } = await import("./index-BeB36d1o.mjs");
   microAppMessageInstance = await initMicroAppMessage();
   console.log(isBaseApp() ? "主应用" : "子应用", `🐷${getMicroAppName()}:`, "🐬microAppMessage初始化完成", microAppMessageInstance);
   return microAppInst;
@@ -6908,17 +6906,20 @@ async function initMyMicroApp(app, options, router2, store) {
 function getMicroAppMessage() {
   return microAppMessageInstance;
 }
-exports.EventCenterForMicroApp = EventCenterForMicroApp;
-exports.appConfigs = appConfigs;
-exports.getAllApps = getAllApps;
-exports.getMainAppConfigs = getMainAppConfigs;
-exports.getMicroAppMessage = getMicroAppMessage;
-exports.getRounterInstance = getRounterInstance;
-exports.getSubAppConfigs = getSubAppConfigs;
-exports.initMyMicroApp = initMyMicroApp;
-exports.initVueRouter = initVueRouter;
-exports.microApp = microApp;
-exports.microAppSetting = microAppSetting$1;
-exports.microAppUtils = microAppUtils;
-exports.renderAllSubApp = renderAllSubApp;
-exports.utils = utils;
+const microAppRouter = getRounterInstance();
+export {
+  EventCenterForMicroApp as E,
+  microAppUtils as a,
+  getMicroAppMessage as b,
+  microAppRouter as c,
+  microAppSetting$1 as d,
+  getMainAppConfigs as e,
+  getSubAppConfigs as f,
+  getAllApps as g,
+  router as h,
+  initMyMicroApp as i,
+  appConfigs as j,
+  microApp as m,
+  renderAllSubApp as r,
+  utils as u
+};
