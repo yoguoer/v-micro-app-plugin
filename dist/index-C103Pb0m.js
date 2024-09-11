@@ -6755,7 +6755,7 @@ class MicroApp extends EventCenterForBaseApp {
 const microApp = new MicroApp();
 function IsMicroApp() {
   const isBaseApp = microAppSetting$1.getConfig("isBaseApp");
-  return isBaseApp ? true : window.__MICRO_APP_ENVIRONMENT__ || false;
+  return isBaseApp || false;
 }
 function IsBaseApp() {
   return microAppSetting$1.getConfig("isBaseApp");
@@ -6882,13 +6882,13 @@ async function initMyMicroApp(app, options, router2, store) {
   const microAppUtils2 = await Promise.resolve().then(() => utils);
   console.log(`💥microAppUtils已可用:`, microAppUtils2.default);
   const { getMicroApp: getMicroApp2, isBaseApp, isMicroApp, getMicroAppName } = microAppUtils2.default;
-  const { initMicroApp } = await Promise.resolve().then(() => require("./initMicroApp-DZsRWcZ-.js"));
+  const { initMicroApp } = await Promise.resolve().then(() => require("./initMicroApp-02ezKcav.js"));
   initMicroApp(isBaseApp(), app, options, router2, store);
   initVueRouter(router2);
   const microAppInst = getMicroApp2();
   console.log("===🎉🎉 microApp初始化完成 🎉🎉==", microAppInst);
   console.log(`🚩${options.projectName}当前：`, isMicroApp() ? "在微前端环境" : "不在微前端环境", isBaseApp() ? "主应用" : "子应用");
-  const { initMicroAppMessage } = await Promise.resolve().then(() => require("./index-BA3gIhjc.js"));
+  const { initMicroAppMessage } = await Promise.resolve().then(() => require("./index-bTO05u4N.js"));
   microAppMessageInstance = await initMicroAppMessage();
   console.log(isBaseApp() ? "主应用" : "子应用", `🐷${getMicroAppName()}:`, "🐬microAppMessage初始化完成", microAppMessageInstance);
   return microAppInst;
