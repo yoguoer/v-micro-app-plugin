@@ -1,7 +1,5 @@
-"use strict";
-Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
-const index = require("./index-CR15ihRZ.js");
-const { getMicroAppName } = index.microAppUtils;
+import { g as getAllApps, E as EventCenterForMicroApp, a as microAppUtils } from "./index-JJf14dij.mjs";
+const { getMicroAppName } = microAppUtils;
 class MicroAppMessage {
   constructor(app, isBaseApp, disableSandbox) {
     this.app = app;
@@ -9,14 +7,14 @@ class MicroAppMessage {
     this.disableSandbox = disableSandbox;
     if (disableSandbox) {
       if (isBaseApp) {
-        for (let appName of index.getAllApps()) {
-          window[`eventCenterForApp${appName}`] = new index.EventCenterForMicroApp(appName);
+        for (let appName of getAllApps()) {
+          window[`eventCenterForApp${appName}`] = new EventCenterForMicroApp(appName);
         }
       } else {
         const appName = getMicroAppName();
         if (appName && window) {
           if (!window[`eventCenterForApp${appName}`]) {
-            window[`eventCenterForApp${appName}`] = new index.EventCenterForMicroApp(appName);
+            window[`eventCenterForApp${appName}`] = new EventCenterForMicroApp(appName);
           }
           this.app = window[`eventCenterForApp${appName}`];
         } else {
@@ -102,4 +100,6 @@ class MicroAppMessage {
     this.app.clearGlobalData();
   }
 }
-exports.default = MicroAppMessage;
+export {
+  MicroAppMessage as default
+};

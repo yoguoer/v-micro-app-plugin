@@ -1,5 +1,7 @@
-import { g as getAllApps, E as EventCenterForMicroApp, a as microAppUtils } from "./index-BpuVTkrV.mjs";
-const { getMicroAppName } = microAppUtils;
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const index = require("./index-C103Pb0m.js");
+const { getMicroAppName } = index.microAppUtils;
 class MicroAppMessage {
   constructor(app, isBaseApp, disableSandbox) {
     this.app = app;
@@ -7,14 +9,14 @@ class MicroAppMessage {
     this.disableSandbox = disableSandbox;
     if (disableSandbox) {
       if (isBaseApp) {
-        for (let appName of getAllApps()) {
-          window[`eventCenterForApp${appName}`] = new EventCenterForMicroApp(appName);
+        for (let appName of index.getAllApps()) {
+          window[`eventCenterForApp${appName}`] = new index.EventCenterForMicroApp(appName);
         }
       } else {
         const appName = getMicroAppName();
         if (appName && window) {
           if (!window[`eventCenterForApp${appName}`]) {
-            window[`eventCenterForApp${appName}`] = new EventCenterForMicroApp(appName);
+            window[`eventCenterForApp${appName}`] = new index.EventCenterForMicroApp(appName);
           }
           this.app = window[`eventCenterForApp${appName}`];
         } else {
@@ -100,6 +102,4 @@ class MicroAppMessage {
     this.app.clearGlobalData();
   }
 }
-export {
-  MicroAppMessage as default
-};
+exports.default = MicroAppMessage;
