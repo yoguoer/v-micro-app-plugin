@@ -1,4 +1,4 @@
-import { i, e, b, h, f, c, d, a, r } from "./index-D15vt_Hl.mjs";
+import { i, e, b, h, f, c, d, a, r } from "./index-BpuVTkrV.mjs";
 export {
   i as default,
   e as getMainAppConfigs,
