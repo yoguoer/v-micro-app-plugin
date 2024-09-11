@@ -20,7 +20,7 @@ export async function initMicroApp(isBaseApp: boolean, app: object, options: mic
         // 为子应用时, 注册子应用相关方法
         if (window) {
             window.unmount = () => {
-                app.unmount()
+                app?.unmount && app.unmount()
                 router = null
                 store = null
             }

@@ -1,21 +1,19 @@
-"use strict";
 const _microAppSetting = class _microAppSetting {
   // 私有构造函数，确保外部不能直接通过new创建实例  
   constructor() {
     this.setting = {
       projectName: "",
       // 项目名称
-      subAppConfigs: {},
-      // 子应用配置
       isBaseApp: true,
       // 是否为 micro-app 主应用
       basePath: "",
       // 打包路径
-      disableSandbox: false,
+      "disable-sandbox": false,
       // 是否禁用沙箱
       iframe: true
       // 是否使用 iframe
     };
+    this.subAppConfigs = {};
   }
   // 获取单例实例  
   static getInstance() {
@@ -31,7 +29,9 @@ const _microAppSetting = class _microAppSetting {
   // 一次性设置全局配置  
   setAllConfig(initValue) {
     for (const key in initValue) {
-      if (key in this.setting) {
+      if (key === "subAppConfigs") {
+        this.subAppConfigs[key] = initValue[key];
+      } else {
         this.setting[key] = initValue[key];
       }
     }
@@ -40,6 +40,18 @@ const _microAppSetting = class _microAppSetting {
   // 获取全局配置  
   getConfig(key) {
     return this.setting[key];
+  }
+  // 获取全局配置  
+  getMainAppConfigs() {
+    return this.setting;
+  }
+  // 获取子应用配置
+  getSubAppConfigs(appName) {
+    return this.subAppConfigs[appName];
+  }
+  // 获取子应用配置
+  getAllSubAppConfigs() {
+    return this.subAppConfigs;
   }
 };
 _microAppSetting.instance = null;
@@ -1580,8 +1592,8 @@ function runDynamicInlineScript(address, app, scriptInfo) {
   runScript(address, app, scriptInfo, void 0, replaceElement);
   return replaceElement;
 }
-function runCode2InlineScript(address, code, module2, scriptElement, attrs, callback) {
-  if (module2) {
+function runCode2InlineScript(address, code, module, scriptElement, attrs, callback) {
+  if (module) {
     globalEnv.rawSetAttribute.call(scriptElement, "type", "module");
     if (isInlineScript(address)) {
       scriptElement.textContent = code;
@@ -6837,34 +6849,10 @@ function isArray(val) {
   return val && Array.isArray(val);
 }
 function getSubAppConfigs() {
-  return microAppSetting$1.getConfig("subAppConfigs");
+  return microAppSetting$1.getAllSubAppConfigs();
 }
 function getMainAppConfigs() {
-  return {
-    name: microAppSetting$1.getConfig("projectName"),
-    //应用名称
-    "disable-sandbox": microAppSetting$1.getConfig("disableSandbox"),
-    //是否禁用沙箱
-    iframe: microAppSetting$1.getConfig("iframe"),
-    //是否使用iframe
-    lifeCycles: {
-      created(e, appName) {
-        console.log(`💨子应用【${appName}】被创建！`);
-      },
-      beforemount(e, appName) {
-        console.log(`💥子应用【${appName}】即将渲染！`);
-      },
-      mounted(e, appName) {
-        console.log(`💯子应用【${appName}】已经渲染完成！`);
-      },
-      unmount(e, appName) {
-        console.log(`❎子应用【${appName}】已经卸载！`);
-      },
-      error(e, appName) {
-        console.log(`❌子应用【${appName}】加载出错！`);
-      }
-    }
-  };
+  return microAppSetting$1.getMainAppConfigs();
 }
 const appConfigs = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
@@ -6893,13 +6881,13 @@ async function initMyMicroApp(app, options, router2, store) {
   const microAppUtils2 = await Promise.resolve().then(() => utils);
   console.log(`💥microAppUtils已可用:`, microAppUtils2.default);
   const { getMicroApp: getMicroApp2, isBaseApp, isMicroApp, getMicroAppName } = microAppUtils2.default;
-  const { initMicroApp } = await Promise.resolve().then(() => require("./initMicroApp-BbNaPcdq.js"));
+  const { initMicroApp } = await import("./initMicroApp-BLEYviVV.mjs");
   initMicroApp(isBaseApp(), app, options, router2, store);
   initVueRouter(router2);
   const microAppInst = getMicroApp2();
   console.log("===🎉🎉 microApp初始化完成 🎉🎉==", microAppInst);
   console.log(`🚩${options.projectName}当前：`, isMicroApp() ? "在微前端环境" : "不在微前端环境", isBaseApp() ? "主应用" : "子应用");
-  const { initMicroAppMessage } = await Promise.resolve().then(() => require("./index-BruyGh-H.js"));
+  const { initMicroAppMessage } = await import("./index-t3gnOptN.mjs");
   microAppMessageInstance = await initMicroAppMessage();
   console.log(isBaseApp() ? "主应用" : "子应用", `🐷${getMicroAppName()}:`, "🐬microAppMessage初始化完成", microAppMessageInstance);
   return microAppInst;
@@ -6908,17 +6896,19 @@ function getMicroAppMessage() {
   return microAppMessageInstance;
 }
 const microAppRouter = getRounterInstance();
-exports.EventCenterForMicroApp = EventCenterForMicroApp;
-exports.appConfigs = appConfigs;
-exports.getAllApps = getAllApps;
-exports.getMainAppConfigs = getMainAppConfigs;
-exports.getMicroAppMessage = getMicroAppMessage;
-exports.getSubAppConfigs = getSubAppConfigs;
-exports.initMyMicroApp = initMyMicroApp;
-exports.microApp = microApp;
-exports.microAppRouter = microAppRouter;
-exports.microAppSetting = microAppSetting$1;
-exports.microAppUtils = microAppUtils;
-exports.renderAllSubApp = renderAllSubApp;
-exports.router = router;
-exports.utils = utils;
+export {
+  EventCenterForMicroApp as E,
+  microAppUtils as a,
+  getMicroAppMessage as b,
+  microAppRouter as c,
+  microAppSetting$1 as d,
+  getMainAppConfigs as e,
+  getSubAppConfigs as f,
+  getAllApps as g,
+  router as h,
+  initMyMicroApp as i,
+  appConfigs as j,
+  microApp as m,
+  renderAllSubApp as r,
+  utils as u
+};
